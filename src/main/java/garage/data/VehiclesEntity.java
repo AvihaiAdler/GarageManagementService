@@ -3,22 +3,28 @@ package garage.data;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import garage.vehicles.util.EnergySource;
+import garage.vehicles.util.VehicleType;
 import garage.vehicles.util.Wheel;
 
-public class VehicleEntity {
+@Document(collection = "vehicles")
+public class VehiclesEntity {
   private String id;
-  private String vehicleType;
-  private String energySource;
+  private VehicleType vehicleType;
+  private EnergySource energySource;
   private List<Wheel> wheels;
   private String modelName;
   private String licenseNumber;
   private int availableEnergyPercentage;
   private int maxTirePressure;
   
-  public VehicleEntity() { }
+  public VehiclesEntity() { }
   
-  public VehicleEntity(String vehicleType, 
-          String energySource, 
+  public VehiclesEntity(VehicleType vehicleType, 
+          EnergySource energySource, 
           List<Wheel> wheels, 
           String modelName, 
           String licenseNumber, 
@@ -34,6 +40,7 @@ public class VehicleEntity {
     this.maxTirePressure = maxTirePressure;
   }
 
+  @Id
   public String getId() {
     return id;
   }
@@ -42,19 +49,19 @@ public class VehicleEntity {
     this.id = id;
   }
 
-  public String getVehicleType() {
+  public VehicleType getVehicleType() {
     return vehicleType;
   }
 
-  public void setVehicleType(String vehicleType) {
+  public void setVehicleType(VehicleType vehicleType) {
     this.vehicleType = vehicleType;
   }
 
-  public String getEnergySource() {
+  public EnergySource getEnergySource() {
     return energySource;
   }
 
-  public void setEnergySource(String energySource) {
+  public void setEnergySource(EnergySource energySource) {
     this.energySource = energySource;
   }
 
@@ -111,13 +118,13 @@ public class VehicleEntity {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    VehicleEntity other = (VehicleEntity) obj;
+    VehiclesEntity other = (VehiclesEntity) obj;
     return Objects.equals(id, other.id);
   }
 
   @Override
   public String toString() {
-    return "VehicleEntity [id=" + id + ", vehicleType=" + vehicleType + ", energySource=" + energySource + ", wheels="
+    return "VehiclesEntity [id=" + id + ", vehicleType=" + vehicleType + ", energySource=" + energySource + ", wheels="
             + wheels + ", modelName=" + modelName + ", licenseNumber=" + licenseNumber + ", availableEnergyPercentage="
             + availableEnergyPercentage + ", maxTirePressure=" + maxTirePressure + "]";
   }
