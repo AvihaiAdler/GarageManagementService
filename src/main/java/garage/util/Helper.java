@@ -2,6 +2,7 @@ package garage.util;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import garage.vehicles.util.VehicleType;
@@ -40,5 +41,13 @@ public class Helper {
     
     final String pattern = "[0-9]{3}-[0-9]{2}-[0-9]{3}|[0-9]{2}-[0-9]{3}-[0-9]{2}";
     return Pattern.matches(pattern, licenseNumber);
+  }
+  
+  public static boolean checkValidSortParam(String sortParam) {
+    final var sortParams = List.of("id", "model_name", "license_number", "energy_percentage", "tire_pressure");
+    
+    return sortParams
+            .stream()
+            .anyMatch(param -> param.equals(sortParam));
   }
 }
