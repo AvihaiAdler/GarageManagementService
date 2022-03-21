@@ -1,6 +1,6 @@
 package garage.vehicles.util;
 
-public enum VehicleType {
+public enum VehicleTypes {
   Motorcycle,
   Car,
   Truck

@@ -13,7 +13,7 @@ public class VehicleEntity {
   private Map<String, Integer> wheels;
   private String modelName;
   private String licenseNumber;
-  private int availableEnergyPercentage;
+  private int energyPercentage;
   private int maxTirePressure;
   
   public VehicleEntity() { }
@@ -23,7 +23,7 @@ public class VehicleEntity {
           Map<String, Integer> wheels, 
           String modelName, 
           String licenseNumber, 
-          int availableEnergyPercentage, 
+          int energyPercentage, 
           int maxTirePressure) {
     id = null;
     this.vehicleType = vehicleType;
@@ -31,7 +31,7 @@ public class VehicleEntity {
     this.wheels = wheels;
     this.modelName = modelName;
     this.licenseNumber = licenseNumber;
-    this.availableEnergyPercentage = availableEnergyPercentage;
+    this.energyPercentage = energyPercentage;
     this.maxTirePressure = maxTirePressure;
   }
 
@@ -84,12 +84,12 @@ public class VehicleEntity {
     this.licenseNumber = licenseNumber;
   }
 
-  public int getAvailableEnergyPercentage() {
-    return availableEnergyPercentage;
+  public int getEnergyPercentage() {
+    return energyPercentage;
   }
 
-  public void setAvailableEnergyPercentage(int availableEnergyPercentage) {
-    this.availableEnergyPercentage = availableEnergyPercentage;
+  public void setEnergyPercentage(int energyPercentage) {
+    this.energyPercentage = energyPercentage;
   }
 
   public int getMaxTirePressure() {
@@ -121,6 +121,6 @@ public class VehicleEntity {
   public String toString() {
     return "VehiclesEntity [id=" + id + ", vehicleType=" + vehicleType + ", energySource=" + energySource + ", wheels="
             + wheels + ", modelName=" + modelName + ", licenseNumber=" + licenseNumber + ", availableEnergyPercentage="
-            + availableEnergyPercentage + ", maxTirePressure=" + maxTirePressure + "]";
+            + energyPercentage + ", maxTirePressure=" + maxTirePressure + "]";
   }
 }
