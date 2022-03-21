@@ -1,11 +1,10 @@
 package garage.vehicles;
 
-public record VehicleBoundary (String vehicleType,
+public record VehicleBoundary (VehicleType vehicleType,
         String modelName,
         String licenseNumber,
-        Integer availableEnergyPercentage,
+        Integer energyPercentage,
         Integer maxTirePressure) { 
-  
 }
 
   
