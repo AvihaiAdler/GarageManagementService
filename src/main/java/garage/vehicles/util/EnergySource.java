@@ -2,7 +2,7 @@ package garage.vehicles.util;
 
 public enum EnergySource {
   Electric("electric"),
-  Fuel("fuel");
+  Regular("regular");
   
   private final String energyType;
   
