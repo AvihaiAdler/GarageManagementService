@@ -15,4 +15,6 @@ public interface VehicleService {
   public void inflateTires(String licenseNumber);
   
   public void refuel(String licenseNumber);
+  
+  public void deleteAllVehicles();
 }

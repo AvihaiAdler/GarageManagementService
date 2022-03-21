@@ -1,11 +1,9 @@
 package garage.vehicles;
 
-import java.util.List;
-
-import garage.vehicles.util.Wheel;
+import java.util.Map;
 
 public record DetailedVehicleBoundary(String vehicleType,
-        List<Wheel> wheels,
+        Map<String, Integer> wheels,
         String modelName,
         String licenseNumber,
         Integer availableEnergyPercentage,

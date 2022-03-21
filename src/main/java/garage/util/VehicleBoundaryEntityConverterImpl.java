@@ -1,13 +1,12 @@
 package garage.util;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 import org.springframework.stereotype.Component;
 import garage.data.VehicleEntity;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.util.EnergySource;
-import garage.vehicles.util.TirePosition;
 import garage.vehicles.util.VehicleType;
-import garage.vehicles.util.Wheel;
 
 @Component
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 
@@ -29,10 +28,10 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
     if(energyPercantage == null) energyPercantage = 0;
     
     var splitted = boundary.vehicleType().split("\\s+");
-    var vehicleType = getType(splitted[0]);
+    var vehicleType = getType(splitted[1]);
     
-    return new VehicleEntity(vehicleType, 
-            getEnergySource(splitted[1]), 
+    return new VehicleEntity(splitted[1], 
+            splitted[0], 
             getWheels(vehicleType), 
             boundary.modelName(), 
             boundary.licenseNumber(), 
@@ -40,7 +39,7 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
             boundary.maxTirePressure());
   }
   
-  public VehicleType getType(String type) {
+  private VehicleType getType(String type) {
     return switch(type) {
       case "motorcycle" -> VehicleType.Motorcycle;
       case "car" -> VehicleType.Car;
@@ -49,38 +48,10 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
     };
   }
   
-  public EnergySource getEnergySource(String energySource) {
-    return switch(energySource) {
-      case "electric" -> EnergySource.Electric;
-      case "fuel" -> EnergySource.Regular;
-      default -> throw new IllegalArgumentException("invalid energy source " + energySource);
-    };
-  }
-  
-  private List<Wheel> getWheels(VehicleType type) {
-    return switch(type) {
-      case Motorcycle -> List.of(new Wheel(0, TirePosition.TireOne), 
-              new Wheel(0, TirePosition.TireTwo));
-      case Car -> List.of(new Wheel(0, TirePosition.TireOne), 
-              new Wheel(0, TirePosition.TireTwo), 
-              new Wheel(0, TirePosition.TireThree), 
-              new Wheel(0, TirePosition.TireFour));
-      case Truck ->List.of(new Wheel(0, TirePosition.TireOne), 
-              new Wheel(0, TirePosition.TireTwo), 
-              new Wheel(0, TirePosition.TireThree), 
-              new Wheel(0, TirePosition.TireFour),
-              new Wheel(0, TirePosition.TireFive), 
-              new Wheel(0, TirePosition.TireSix), 
-              new Wheel(0, TirePosition.TireSeven), 
-              new Wheel(0, TirePosition.TireEight),
-              new Wheel(0, TirePosition.TireNine), 
-              new Wheel(0, TirePosition.TireTen), 
-              new Wheel(0, TirePosition.TireEleven), 
-              new Wheel(0, TirePosition.TireTwelve),
-              new Wheel(0, TirePosition.TireThirteen), 
-              new Wheel(0, TirePosition.TireFourteen), 
-              new Wheel(0, TirePosition.TireFifteen), 
-              new Wheel(0, TirePosition.TireSixteen));
-    };
+  private Map<String, Integer> getWheels(VehicleType type) {
+    var numOfWheels = Helper.TYPES.get(type);
+    var wheels = new HashMap<String, Integer>();
+    IntStream.range(0, numOfWheels).boxed().forEach(i -> wheels.put("tire" + i, 0));
+    return wheels;
   }
 }

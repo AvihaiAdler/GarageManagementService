@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import garage.vehicles.util.EnergySource;
 import garage.vehicles.util.VehicleType;
 
 public class Helper {
@@ -23,9 +25,9 @@ public class Helper {
     
     if(splitted.length < 2) return false;
     
-    var valid = Arrays.asList(VehicleType.values())
+    var valid = Arrays.asList(EnergySource.values())
             .stream()
-            .map(VehicleType::toString)
+            .map(EnergySource::toString)
             .anyMatch(val -> val.equalsIgnoreCase(splitted[0]));
     
     valid &= Arrays.asList(VehicleType.values())
@@ -34,6 +36,15 @@ public class Helper {
             .anyMatch(val -> val.equalsIgnoreCase(splitted[1]));
     
     return valid;
+  }
+  
+  public static boolean checkValidEnergySource(String energySource) {
+    if(energySource == null) return false;
+    
+    return Arrays.asList(EnergySource.values())
+            .stream()
+            .map(EnergySource::toString)
+            .anyMatch(energyType -> energyType.equalsIgnoreCase(energySource));
   }
   
   public static boolean checkValidLicenseNumber(String licenseNumber) {

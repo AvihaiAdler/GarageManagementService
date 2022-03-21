@@ -2,6 +2,7 @@ package garage.vehicles;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,15 +49,18 @@ public class VehiclesController {
             .toArray(new DetailedVehicleBoundary[0]);
   }
   
-  @PutMapping(path = "/inflate/{licenseNumber}", 
-          consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/inflate/{licenseNumber}")
   public void inflateTires(@PathVariable("licenseNumber") String licenseNumber) {
     vehiclesService.inflateTires(licenseNumber);
   }
   
-  @PutMapping(path = "/refuel/{licenseNumber}", 
-          consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/refuel/{licenseNumber}")
   public void refuel(@PathVariable("licenseNumber") String licenseNumber) {
     vehiclesService.refuel(licenseNumber);
+  }
+  
+  @DeleteMapping(path = "/admin/delete")
+  public void deleteAllVehicles() { 
+    vehiclesService.deleteAllVehicles();
   }
 }

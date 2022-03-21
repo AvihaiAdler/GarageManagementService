@@ -1,21 +1,16 @@
 package garage.data;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import garage.vehicles.util.EnergySource;
-import garage.vehicles.util.VehicleType;
-import garage.vehicles.util.Wheel;
 
 @Document(collection = "vehicles")
 public class VehicleEntity {
   private String id;
-  private VehicleType vehicleType;
-  private EnergySource energySource;
-  private List<Wheel> wheels;
+  private String vehicleType;
+  private String energySource;
+  private Map<String, Integer> wheels;
   private String modelName;
   private String licenseNumber;
   private int availableEnergyPercentage;
@@ -23,9 +18,9 @@ public class VehicleEntity {
   
   public VehicleEntity() { }
   
-  public VehicleEntity(VehicleType vehicleType, 
-          EnergySource energySource, 
-          List<Wheel> wheels, 
+  public VehicleEntity(String vehicleType, 
+          String energySource, 
+          Map<String, Integer> wheels, 
           String modelName, 
           String licenseNumber, 
           int availableEnergyPercentage, 
@@ -49,27 +44,27 @@ public class VehicleEntity {
     this.id = id;
   }
 
-  public VehicleType getVehicleType() {
+  public String getVehicleType() {
     return vehicleType;
   }
 
-  public void setVehicleType(VehicleType vehicleType) {
+  public void setVehicleType(String vehicleType) {
     this.vehicleType = vehicleType;
   }
 
-  public EnergySource getEnergySource() {
+  public String getEnergySource() {
     return energySource;
   }
 
-  public void setEnergySource(EnergySource energySource) {
+  public void setEnergySource(String energySource) {
     this.energySource = energySource;
   }
 
-  public List<Wheel> getWheels() {
+  public Map<String, Integer> getWheels() {
     return wheels;
   }
 
-  public void setWheels(List<Wheel> wheels) {
+  public void setWheels(Map<String, Integer> wheels) {
     this.wheels = wheels;
   }
 

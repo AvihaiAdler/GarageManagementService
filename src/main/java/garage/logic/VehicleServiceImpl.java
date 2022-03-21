@@ -1,6 +1,7 @@
 package garage.logic;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import garage.dal.VehiclesDao;
 import garage.exceptions.BadRequestException;
-import garage.exceptions.ForbiddenRequestException;
+import garage.exceptions.ConflictException;
 import garage.exceptions.NotFoundException;
 import garage.util.Helper;
 import garage.util.VehicleBoundaryEntityConverter;
@@ -41,14 +42,17 @@ public class VehicleServiceImpl implements VehicleService {
   @Override
   public DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary) {
     if(Helper.checkValidVehicleType(vehicleBoundary.vehicleType()) == false) {
+      System.out.println("type");
       throw new BadRequestException("invalid vehicle type " + vehicleBoundary.vehicleType());
     }
     
     if(vehicleBoundary.modelName() == null) {
+      System.out.println("model name");
       throw new BadRequestException("vehicle model name must not be null");
     }
     
     if(Helper.checkValidLicenseNumber(vehicleBoundary.licenseNumber()) == false) {
+      System.out.println("license");
       throw new BadRequestException("invalid license number " + vehicleBoundary.licenseNumber());
     }
     
@@ -65,7 +69,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
     
     vehiclesDao.findByLicenseNumber(vehicleBoundary.licenseNumber()).ifPresent(value -> {
-      throw new ForbiddenRequestException("vehicle number " + vehicleBoundary.licenseNumber() + " already exists");
+      throw new ConflictException("vehicle number " + vehicleBoundary.licenseNumber() + " already exists");
     });
     
     var entity =  vehiclesDao.save(boundaryEntityConverter.toEntity(vehicleBoundary));
@@ -131,7 +135,12 @@ public class VehicleServiceImpl implements VehicleService {
             .findByLicenseNumber(licenseNumber)
             .orElseThrow(() -> new NotFoundException("vehicle number " + licenseNumber + " doesn't exists"));
     
-    vehicleEntity.getWheels().forEach(wheel -> wheel.setTireInlationPercentage(maxPercentage));
+    var wheels = vehicleEntity.getWheels()
+            .entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, v -> maxPercentage));
+    
+    vehicleEntity.setWheels(wheels);
     vehiclesDao.save(vehicleEntity);
   }
 
@@ -147,5 +156,10 @@ public class VehicleServiceImpl implements VehicleService {
     
     vehicleEntity.setAvailableEnergyPercentage(maxPercentage);
     vehiclesDao.save(vehicleEntity);
+  }
+
+  @Override
+  public void deleteAllVehicles() {
+    vehiclesDao.deleteAll();
   }
 }
