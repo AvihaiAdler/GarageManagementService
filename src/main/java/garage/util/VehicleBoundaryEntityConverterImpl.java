@@ -1,7 +1,7 @@
 package garage.util;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import garage.data.VehiclesEntity;
+import garage.data.VehicleEntity;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.util.EnergySource;
@@ -13,7 +13,7 @@ import garage.vehicles.util.Wheel;
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 
   
   @Override
-  public DetailedVehicleBoundary toBoundary(VehiclesEntity entity) {
+  public DetailedVehicleBoundary toBoundary(VehicleEntity entity) {
     var vehicleType = entity.getEnergySource().toString() + " " + entity.getVehicleType();
     return new DetailedVehicleBoundary(vehicleType, 
             entity.getWheels(), 
@@ -24,14 +24,14 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
   }
   
   @Override
-  public VehiclesEntity toEntity(VehicleBoundary boundary) {
+  public VehicleEntity toEntity(VehicleBoundary boundary) {
     var energyPercantage = boundary.availableEnergyPercentage();
     if(energyPercantage == null) energyPercantage = 0;
     
     var splitted = boundary.vehicleType().split("\\s+");
     var vehicleType = getType(splitted[0]);
     
-    return new VehiclesEntity(vehicleType, 
+    return new VehicleEntity(vehicleType, 
             getEnergySource(splitted[1]), 
             getWheels(vehicleType), 
             boundary.modelName(), 

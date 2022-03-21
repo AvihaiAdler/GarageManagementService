@@ -6,11 +6,11 @@ import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 
 public interface VehicleService {
-  public void addVehicle(VehicleBoundary vehicleBoundary);
+  public DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary);
   
   public DetailedVehicleBoundary getVehicle(String licenseNumber);
   
-  public List<DetailedVehicleBoundary> getAllVehicles(int size, int page, String sortBy, String order);
+  public List<DetailedVehicleBoundary> getAllVehicles(String filterType, String filterValue, int size, int page, String sortBy, String order);
   
   public void inflateTires(String licenseNumber);
   

@@ -25,8 +25,8 @@ public class VehiclesController {
   
   @PostMapping(/*path = "/add",*/
           consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void addVehicle(@RequestBody VehicleBoundary vehicleBoundary) {
-    vehiclesService.addVehicle(vehicleBoundary);
+  public DetailedVehicleBoundary addVehicle(@RequestBody VehicleBoundary vehicleBoundary) {
+    return vehiclesService.addVehicle(vehicleBoundary);
   }
   
   @GetMapping(path = "/{licenseNumber}",
@@ -37,12 +37,14 @@ public class VehiclesController {
   
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public DetailedVehicleBoundary[] getAllVehicles(
+          @RequestParam(name = "filterType", required = false, defaultValue = "") String filterType,
+          @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
           @RequestParam(name = "size", required = false, defaultValue = "20") int size,
           @RequestParam(name = "page", required = false, defaultValue = "0") int page,
           @RequestParam(name = "sortBy", required = false, defaultValue = "licenseNumber") String sortBy,
           @RequestParam(name = "order", required = false, defaultValue = "ASC") String order) {
     return vehiclesService
-            .getAllVehicles(size, page, sortBy, order)
+            .getAllVehicles(filterType, filterValue, size, page, sortBy, order)
             .toArray(new DetailedVehicleBoundary[0]);
   }
   
