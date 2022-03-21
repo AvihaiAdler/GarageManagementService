@@ -1,5 +1,22 @@
-{"properties": [{
-  "name": "max.percent",
-  "type": "java.lang.String",
-  "description": "A description for 'max.percent'"
-}]}
+{"properties": [
+  {
+    "name": "max.percent",
+    "type": "java.lang.String",
+    "description": "A description for 'max.percent'"
+  },
+  {
+    "name": "min.percent",
+    "type": "java.lang.String",
+    "description": "A description for 'min.percent'"
+  },
+  {
+    "name": "max.pressure",
+    "type": "java.lang.String",
+    "description": "A description for 'max.pressure'"
+  },
+  {
+    "name": "min.pressure",
+    "type": "java.lang.String",
+    "description": "A description for 'min.pressure'"
+  }
+]}
