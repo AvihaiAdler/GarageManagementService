@@ -25,7 +25,7 @@ The service provide the following utilities:
 
 #### Paging and sorting
 
-The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `DetailedVehicle` boundary which represent 1 Page of 20 size with default sort parameters.
+The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `DetailedVehicle` boundaries which represent 1 Page of 20 size with default sort parameters.
 The endpoint can accepts optional variables to customized the returned data.
 
 - `filterType`: will invoke a query based on it's value. Permitted values are (all values are case sensitive):
@@ -33,7 +33,7 @@ The endpoint can accepts optional variables to customized the returned data.
   - byEnergyType
   - byModelName
   - byVehicleType
-- `filterValue` will supply the value the above query will look for. For example, for `FilterType = byEnergyType` and `filterValue = electric` - the data returned will only contain vehicle with an electric source
+- `filterValue` will supply the value the above query will look for. For example, for `FilterType = byEnergyType` and `filterValue = electric` - the data returned will only contain vehicles with an electric source
 - `size`: the number of elements in a page
 - `page`: a collection of data with a size `size`
 - `sortBy`: will return the data sorted based on the supplied argument. Permitted arguments are:
