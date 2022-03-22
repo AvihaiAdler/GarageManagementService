@@ -15,7 +15,7 @@ import garage.vehicles.misc.Wheel;
 
 @Component
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 
-  private Random rand = new Random();
+  private final Random rand = new Random();
   private int minPressure;
   
   @Value("${min.pressure:0}")
@@ -36,6 +36,8 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
   @Override
   public VehicleEntity toEntity(VehicleBoundary boundary) {
     var energyPercantage = boundary.energyPercentage();
+    
+    // treat null energyPercantage value as 0
     if(energyPercantage == null) energyPercantage = 0;
     
     String energySource = null;
@@ -52,10 +54,15 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
             boundary.maxTirePressure());
   }
   
+  /**
+   * Returns a {@code Map} of {@code Wheel}s initialized as random values
+   * @param boundary : {@code VehicleBoundary}
+   * @return {@code Map<String, Wheel>}
+   */
   private Map<String, Wheel> getWheels(VehicleBoundary boundary) {
     var numOfWheels = Helper.TYPES.get(getTypeAsEnum(boundary.vehicleType()));
     
-    // initiate a Map of wheels. Map structure represent the wheel & it's current pressure percentage,
+    // create a Map of wheels. Map structure represent the wheel & it's current pressure percentage,
     // i.e. (wheel_0, 0), (wheel_3, 50) and so on
     return IntStream.range(0, numOfWheels)
             .boxed()
@@ -65,6 +72,12 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
                     TreeMap::new));
   }
   
+  /**
+   * Converts a {@code VehicleType::getType} to it's correspondence {@code VehicleTypes} enum. <br>
+   * Throws {@code IllegalArgumentException} for invalid {@code VehicleType::getType}
+   * @param vehicleType : {@code VehicleType}
+   * @return {@code VehicleTypes} enum type
+   */
   private VehicleTypes getTypeAsEnum(VehicleType vehicleType) {
     return switch(vehicleType.getType().toLowerCase()) {
       case "truck" -> VehicleTypes.Truck;
