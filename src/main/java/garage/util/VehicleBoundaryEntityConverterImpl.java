@@ -1,9 +1,9 @@
 package garage.util;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import garage.data.VehicleEntity;
@@ -11,6 +11,7 @@ import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
 import garage.vehicles.util.VehicleTypes;
+import garage.vehicles.util.Wheel;
 
 @Component
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 
@@ -37,9 +38,13 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
     var energyPercantage = boundary.energyPercentage();
     if(energyPercantage == null) energyPercantage = 0;
     
+    String energySource = null;
+    if(getTypeAsEnum(boundary.vehicleType()) != VehicleTypes.Truck) {
+      energySource = boundary.vehicleType().getEnergySource().toLowerCase();
+    }
     
     return new VehicleEntity(boundary.vehicleType().getType().toLowerCase(), 
-            boundary.vehicleType().getEnergySource().toLowerCase(), 
+            energySource, 
             getWheels(boundary), 
             boundary.modelName().toLowerCase(), 
             boundary.licenseNumber(), 
@@ -47,16 +52,17 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
             boundary.maxTirePressure());
   }
   
-  private Map<String, Integer> getWheels(VehicleBoundary boundary) {
+  private Map<String, Wheel> getWheels(VehicleBoundary boundary) {
     var numOfWheels = Helper.TYPES.get(getTypeAsEnum(boundary.vehicleType()));
     
     // initiate a Map of wheels. Map structure represent the wheel & it's current pressure percentage,
-    // i.e. (wheel0, 0), (wheel3, 50) and so on
-    var wheels = new HashMap<String, Integer>();
-    IntStream.range(0, numOfWheels)
+    // i.e. (wheel_0, 0), (wheel_3, 50) and so on
+    return IntStream.range(0, numOfWheels)
             .boxed()
-            .forEach(i -> wheels.put("wheel" + i, rand.nextInt(minPressure, boundary.maxTirePressure())));
-    return wheels;
+            .collect(Collectors.toMap(k -> "wheel_" + k, 
+                    v -> new Wheel(rand.nextInt(minPressure, boundary.maxTirePressure())), 
+                    (k1, k2) -> k2, 
+                    TreeMap::new));
   }
   
   private VehicleTypes getTypeAsEnum(VehicleType vehicleType) {

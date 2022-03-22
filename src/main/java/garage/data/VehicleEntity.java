@@ -5,12 +5,14 @@ import java.util.Objects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import garage.vehicles.util.Wheel;
+
 @Document(collection = "vehicles")
 public class VehicleEntity {
   private String id;
   private String vehicleType;
   private String energySource;
-  private Map<String, Integer> wheels;
+  private Map<String, Wheel> wheels;
   private String modelName;
   private String licenseNumber;
   private int energyPercentage;
@@ -20,7 +22,7 @@ public class VehicleEntity {
   
   public VehicleEntity(String vehicleType, 
           String energySource, 
-          Map<String, Integer> wheels, 
+          Map<String, Wheel> wheels, 
           String modelName, 
           String licenseNumber, 
           int energyPercentage, 
@@ -60,11 +62,11 @@ public class VehicleEntity {
     this.energySource = energySource;
   }
 
-  public Map<String, Integer> getWheels() {
+  public Map<String, Wheel> getWheels() {
     return wheels;
   }
 
-  public void setWheels(Map<String, Integer> wheels) {
+  public void setWheels(Map<String, Wheel> wheels) {
     this.wheels = wheels;
   }
 

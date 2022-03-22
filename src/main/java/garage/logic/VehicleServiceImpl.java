@@ -15,8 +15,8 @@ import garage.util.Helper;
 import garage.util.VehicleBoundaryEntityConverter;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.util.EnergySource;
 import garage.vehicles.util.VehicleTypes;
+import garage.vehicles.util.Wheel;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -62,7 +62,7 @@ public class VehicleServiceImpl implements VehicleService {
     
     // if truck - override it's energySource to regular
     if(vehicleBoundary.vehicleType().getType().equalsIgnoreCase(VehicleTypes.Truck.toString())) {
-      vehicleBoundary.vehicleType().setType(EnergySource.Regular.toString());
+      vehicleBoundary.vehicleType().setEnergySource(null);
     }
     
     // Model
@@ -156,7 +156,7 @@ public class VehicleServiceImpl implements VehicleService {
     var wheels = vehicleEntity.getWheels()
             .entrySet()
             .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, v -> vehicleEntity.getMaxTirePressure()));
+            .collect(Collectors.toMap(Map.Entry::getKey, v -> new Wheel(vehicleEntity.getMaxTirePressure())));
     
     vehicleEntity.setWheels(wheels);
     vehiclesDao.save(vehicleEntity);
