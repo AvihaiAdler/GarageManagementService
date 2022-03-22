@@ -22,6 +22,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+test {
+  environment "MONGO_CRED", "mongodb://localhost:27017"
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
