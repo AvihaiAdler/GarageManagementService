@@ -62,7 +62,7 @@ The convenient way to Build and run the app is with docker-compose.
 - make sure you have docker up and running
 - navigate to the app root directory using a CLI of your choice
 - run the command `docker-compose -f garage-compose.yaml up` (you can add a `-d` flag to have the app run at the background)
-- if you ran the command with the `-f` flag - in order to shutdown the app run `docker-compose -f garage-compose.yaml down`
+- if you ran the command with the `-f` flag - in order to shutdown the app run `docker-compose -f garage-compose.yaml down` 
 
 You can also run the app from your preferred IDE, just make sure you create an environment variable called `MONGO_CRED` with the URL to your mongodb instance.
 Alternatively you can setup that variable as environment variable on your machine - build the app with gradle (`gradlew assemble`) and run the app through your CLI.
