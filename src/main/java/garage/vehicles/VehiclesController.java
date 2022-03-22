@@ -24,8 +24,7 @@ public class VehiclesController {
     this.vehiclesService = vehiclesService;
   }
   
-  @PostMapping(/*path = "/add",*/
-          consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public DetailedVehicleBoundary addVehicle(@RequestBody VehicleBoundary vehicleBoundary) {
     return vehiclesService.addVehicle(vehicleBoundary);
   }
@@ -49,12 +48,12 @@ public class VehiclesController {
             .toArray(new DetailedVehicleBoundary[0]);
   }
   
-  @PutMapping(path = "/inflate/{licenseNumber}")
+  @PutMapping(path = "/{licenseNumber}/inflate")
   public void inflateTires(@PathVariable("licenseNumber") String licenseNumber) {
     vehiclesService.inflateTires(licenseNumber);
   }
   
-  @PutMapping(path = "/refuel/{licenseNumber}")
+  @PutMapping(path = "/{licenseNumber}/refuel")
   public void refuel(@PathVariable("licenseNumber") String licenseNumber) {
     vehiclesService.refuel(licenseNumber);
   }
