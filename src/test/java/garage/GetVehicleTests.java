@@ -45,7 +45,7 @@ public class GetVehicleTests {
   }
   
   @Test
-  public void getValidVehicle() throws Exception {
+  public void getValidVehicleTest() throws Exception {
     var licenseNumber = "00-000-00";
     // given
     var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", licenseNumber, 20, 50);
@@ -72,7 +72,7 @@ public class GetVehicleTests {
   }
   
   @Test
-  public void notFoundVehicle() throws Exception {
+  public void notFoundVehicleTest() throws Exception {
     var licenseNumber = "00-010-00";
     // given
     var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
@@ -95,8 +95,8 @@ public class GetVehicleTests {
   }
   
   @Test
-  public void getVehicleInvalidLicenseNumber() throws Exception {
-    var licenseNumber = "00-00-00";
+  public void getVehicleInvalidLicenseNumberTest() throws Exception {
+    var invaliLicenseNumber = "00-00-00";
     // given
     var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
     // and
@@ -110,7 +110,7 @@ public class GetVehicleTests {
     // when
     // then
     assertThrows(WebClientResponseException.BadRequest.class, () -> webClient.get()
-            .uri("/{licenseNumber}", licenseNumber)
+            .uri("/{licenseNumber}", invaliLicenseNumber)
             .retrieve()
             .bodyToMono(DetailedVehicleBoundary.class)
             .block());
