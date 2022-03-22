@@ -18,8 +18,8 @@ The service provide the following utilities:
 | add a vehicle to the garage           | **POST**   | `/api/v1/vehicles`                         | `Vehicle` boundary  | `DetailedVehicle` boundary          |
 | retrieve a vehicle from the garage    | **GET**    | `/api/v1/vehicles/{licenseNumber}`         | ------              | `DetailedVehicle` boundary          |
 | retrieve all vehicles from the garage | **GET**    | `/api/v1/vehicles`                         | ------              | Array of `DetailedVehicle` boundary |
-| inflate a tire of a vehicle           | **PUT**    | `/api/v1/vehicles/{licenseNumber}/inflate` | `Pressure` boundary | ------                              |
-| refuel/rechage a vehicle              | **PUT**    | `/api/v1/vehicles/{licenseNumber}/refuel`  | `Fuel` boundary     | ------                              |
+| inflate the tires of a vehicle           | **PUT**    | `/api/v1/vehicles/{licenseNumber}/inflate` | `Pressure` boundary | ------                              |
+| refuel/re-charge a vehicle              | **PUT**    | `/api/v1/vehicles/{licenseNumber}/refuel`  | `Fuel` boundary     | ------                              |
 | delete a vehicle                      | **DELETE** | `/api/v1/vehicles/{licenseNumber}/delete`  | ------              | ------                              |
 | delete all vehicles                   | **DELETE** | `/api/v1/vehicles/admin/delete`            | ------              | ------                              |
 
