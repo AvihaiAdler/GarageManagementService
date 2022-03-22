@@ -29,7 +29,7 @@ The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `Det
 The endpoint can accepts optional variables to customized the returned data.
 
 - `filterType`: will invoke a query based on it's value. Permitted values are (all values are case sensitive):
-  - none
+  - none (i.e. empty String)
   - byEnergyType
   - byModelName
   - byVehicleType
