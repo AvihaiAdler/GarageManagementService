@@ -60,7 +60,7 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
     return IntStream.range(0, numOfWheels)
             .boxed()
             .collect(Collectors.toMap(k -> "wheel_" + k, 
-                    v -> new Wheel(rand.nextInt(minPressure, boundary.maxTirePressure())), 
+                    v -> new Wheel(rand.nextInt(boundary.maxTirePressure() - minPressure + 1) + minPressure), 
                     (k1, k2) -> k2, 
                     TreeMap::new));
   }
