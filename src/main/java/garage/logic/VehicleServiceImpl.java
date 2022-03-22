@@ -178,6 +178,20 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
+  public void delete(String licenseNumber) {
+    // validity check
+    if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
+      throw new BadRequestException("invalid license number " + licenseNumber);
+    }
+    
+    var vehicleEntity = vehiclesDao
+            .findByLicenseNumber(licenseNumber)
+            .orElseThrow(() -> new NotFoundException("vehicle number " + licenseNumber + " doesn't exists"));
+    
+    vehiclesDao.delete(vehicleEntity);
+  }
+
+  @Override
   public void deleteAllVehicles() {
     vehiclesDao.deleteAll();
   }
@@ -200,4 +214,5 @@ public class VehicleServiceImpl implements VehicleService {
       default -> throw new BadRequestException("invalid sort order " + order);
     };
   }
+
 }

@@ -17,4 +17,6 @@ public interface VehicleService {
   public void refuel(String licenseNumber);
   
   public void deleteAllVehicles();
+
+  public void delete(String licenseNumber);
 }

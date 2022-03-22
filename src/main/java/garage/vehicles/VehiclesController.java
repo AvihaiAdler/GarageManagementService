@@ -58,6 +58,11 @@ public class VehiclesController {
     vehiclesService.refuel(licenseNumber);
   }
   
+  @DeleteMapping(path = "/{licenseNumber}/delete")
+  public void deleteVehicle(@PathVariable("licenseNumber") String licenseNumber) {
+    vehiclesService.delete(licenseNumber);
+  }
+  
   @DeleteMapping(path = "/admin/delete")
   public void deleteAllVehicles() { 
     vehiclesService.deleteAllVehicles();
