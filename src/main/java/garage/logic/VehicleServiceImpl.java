@@ -206,7 +206,7 @@ public class VehicleServiceImpl implements VehicleService {
   }
   
   /*
-   * Convert API sort params to their corresponding VehicleEntity data memebers  
+   * Converts API sort params to their corresponding VehicleEntity data members  
    */
   private String getSortParam(String sortBy) {
     return switch(sortBy) {
@@ -220,7 +220,7 @@ public class VehicleServiceImpl implements VehicleService {
   }
   
   /*
-   * Convert API order params to their corresponding Direction
+   * Converts API order params to their corresponding Direction
    */
   private Direction getDirection(String order) {
     return switch(order) {
