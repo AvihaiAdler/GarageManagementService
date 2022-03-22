@@ -88,8 +88,8 @@ class AddVehiceTests {
 	  assertThat(response.licenseNumber()).isEqualTo(vehicleBoundary.licenseNumber());
 	  assertThat(response.energyPercentage()).isEqualTo(vehicleBoundary.energyPercentage());
 	  assertThat(response.maxTirePressure()).isEqualTo(vehicleBoundary.maxTirePressure());
-	  
-	  // wheels mechanics
+	
+	  // wheels checks
     assertThat(response.wheels()).isNotNull();
     assertThat(response.wheels()).isNotEmpty();
     assertThat(response.wheels().get("wheel_0")).isNotNull();
