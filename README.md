@@ -1,6 +1,6 @@
 ### Garage Management Service
 
-is a simple service simulating a garage management system. The service implemented in Java over Spring Boot, and uses MongoDB as a database.
+is a simple service simulating a garage management system. The service is written in Java with Spring Boot, and uses MongoDB as its database.
 The service provide the following utilities:
 
 - add a vehicle to the garage
