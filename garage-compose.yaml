@@ -1,0 +1,26 @@
+version: "2"
+services:
+  aegis:
+    image: garage:0.0.1
+    ports:
+      - 8080:8080
+    environment:
+      MONGO_CRED: mongodb://admin:password@mongodb:27017
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    restart: on-failure
+    expose:
+      - 27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-volume:/data/db
+
+
+volumes:
+  mongo-volume:
+    driver: local
