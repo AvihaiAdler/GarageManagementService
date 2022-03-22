@@ -90,6 +90,7 @@ class AddVehiceTests {
 	  assertThat(response.maxTirePressure()).isEqualTo(vehicleBoundary.maxTirePressure());
 	
 	  // wheels checks
+	  
     assertThat(response.wheels()).isNotNull();
     assertThat(response.wheels()).isNotEmpty();
     assertThat(response.wheels().get("wheel_0")).isNotNull();
