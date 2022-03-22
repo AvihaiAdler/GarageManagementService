@@ -95,7 +95,7 @@ public class InflateTests {
             licenseNumber, 
             5, 
             originalPressure);
-    var pressure = new PressureBoundary(60);
+    var invalidPressure = new PressureBoundary(60);
     
     // and
     webClient.post()
@@ -109,7 +109,7 @@ public class InflateTests {
     // then
     assertThrows(WebClientResponseException.BadRequest.class, () -> webClient.put()
             .uri("/{licenseNumber}/inflate", licenseNumber)
-            .bodyValue(pressure)
+            .bodyValue(invalidPressure)
             .retrieve()
             .bodyToMono(Void.class)
             .log()
@@ -125,7 +125,7 @@ public class InflateTests {
     
     // and
     for(int i = 0; i < Helper.TYPES.get(VehicleTypes.Car); i++) {
-      assertThat(response.wheels().get("wheel_" + i).getPressure()).isNotEqualTo(pressure.pressure()); 
+      assertThat(response.wheels().get("wheel_" + i).getPressure()).isNotEqualTo(invalidPressure.pressure()); 
     }
   }
 }
