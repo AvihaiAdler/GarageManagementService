@@ -15,8 +15,8 @@ import garage.util.Helper;
 import garage.util.VehicleBoundaryEntityConverter;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.util.VehicleTypes;
-import garage.vehicles.util.Wheel;
+import garage.vehicles.misc.VehicleTypes;
+import garage.vehicles.misc.Wheel;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {

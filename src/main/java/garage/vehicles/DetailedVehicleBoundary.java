@@ -1,7 +1,8 @@
 package garage.vehicles;
 
 import java.util.Map;
-import garage.vehicles.util.Wheel;
+
+import garage.vehicles.misc.Wheel;
 
 public record DetailedVehicleBoundary(VehicleType vehicleType,
         Map<String, Wheel> wheels,

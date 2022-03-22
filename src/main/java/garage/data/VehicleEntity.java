@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import garage.vehicles.util.Wheel;
+import garage.vehicles.misc.Wheel;
 
 @Document(collection = "vehicles")
 public class VehicleEntity {

@@ -16,8 +16,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
-import garage.vehicles.util.EnergySource;
-import garage.vehicles.util.VehicleTypes;
+import garage.vehicles.misc.EnergySource;
+import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DeleteVehicleTest {

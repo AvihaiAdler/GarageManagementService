@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import garage.vehicles.VehicleType;
-import garage.vehicles.util.EnergySource;
-import garage.vehicles.util.VehicleTypes;
+import garage.vehicles.misc.EnergySource;
+import garage.vehicles.misc.VehicleTypes;
 
 public class Helper {
   public static final Map<VehicleTypes, Integer> TYPES = new HashMap<>();

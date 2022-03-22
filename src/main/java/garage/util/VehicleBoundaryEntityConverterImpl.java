@@ -10,8 +10,8 @@ import garage.data.VehicleEntity;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
-import garage.vehicles.util.VehicleTypes;
-import garage.vehicles.util.Wheel;
+import garage.vehicles.misc.VehicleTypes;
+import garage.vehicles.misc.Wheel;
 
 @Component
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 

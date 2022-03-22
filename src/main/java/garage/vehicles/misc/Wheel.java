@@ -1,4 +1,4 @@
-package garage.vehicles.util;
+package garage.vehicles.misc;
 
 public class Wheel {
   private int pressure;

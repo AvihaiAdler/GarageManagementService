@@ -19,7 +19,7 @@ import garage.util.Helper;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
-import garage.vehicles.util.VehicleTypes;
+import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class AddVehiceTests {
