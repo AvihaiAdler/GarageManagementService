@@ -1,6 +1,7 @@
 package garage;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import javax.annotation.PostConstruct;
 
@@ -10,9 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import garage.util.Helper;
 import garage.vehicles.DetailedVehicleBoundary;
+import garage.vehicles.PressureBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
 import garage.vehicles.misc.EnergySource;
@@ -45,10 +48,11 @@ public class InflateTests {
   }
   
   @Test
-  public void inflateTest() throws Exception {
+  public void inflateValidPressureTest() throws Exception {
     // given
     var licenseNumber = "000-00-000";
     var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), "Honda", licenseNumber, 5, 55);
+    var pressure = new PressureBoundary(50);
     
     // and
     webClient.post()
@@ -61,6 +65,7 @@ public class InflateTests {
     // when
     webClient.put()
             .uri("/{licenseNumber}/inflate", licenseNumber)
+            .bodyValue(pressure)
             .retrieve()
             .bodyToMono(Void.class)
             .log()
@@ -76,7 +81,51 @@ public class InflateTests {
     
     // then
     for(int i = 0; i < Helper.TYPES.get(VehicleTypes.Car); i++) {
-      assertThat(response.wheels().get("wheel_" + i).getPressure()).isEqualTo(response.maxTirePressure());      
+      assertThat(response.wheels().get("wheel_" + i).getPressure()).isEqualTo(pressure.pressure());      
+    }
+  }
+  
+  @Test
+  public void inflateInvalidPressureTest() throws Exception {
+    // given
+    var licenseNumber = "000-00-000";
+    var originalPressure = 55;
+    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), 
+            "Honda", 
+            licenseNumber, 
+            5, 
+            originalPressure);
+    var pressure = new PressureBoundary(60);
+    
+    // and
+    webClient.post()
+            .bodyValue(vehicle)
+            .retrieve()
+            .bodyToMono(DetailedVehicleBoundary.class)
+            .log()
+            .block();
+    
+    // when
+    // then
+    assertThrows(WebClientResponseException.BadRequest.class, () -> webClient.put()
+            .uri("/{licenseNumber}/inflate", licenseNumber)
+            .bodyValue(pressure)
+            .retrieve()
+            .bodyToMono(Void.class)
+            .log()
+            .block());
+    
+    // and
+    var response = webClient.get()
+            .uri("/{licenseNumber}", licenseNumber)
+            .retrieve()
+            .bodyToMono(DetailedVehicleBoundary.class)
+            .log()
+            .block();
+    
+    // and
+    for(int i = 0; i < Helper.TYPES.get(VehicleTypes.Car); i++) {
+      assertThat(response.wheels().get("wheel_" + i).getPressure()).isNotEqualTo(pressure.pressure()); 
     }
   }
 }

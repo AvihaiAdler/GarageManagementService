@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import garage.vehicles.DetailedVehicleBoundary;
+import garage.vehicles.FuelBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.VehicleType;
 import garage.vehicles.misc.EnergySource;
@@ -20,16 +20,10 @@ public class RefuelTest {
   private int port;
   private String baseUrl;
   private WebClient webClient;
-  private int maxFuelPercentage;
   
   @LocalServerPort
   public void setPort(int port) {
     this.port = port;
-  }
-  
-  @Value("${max.percent}")
-  public void setMaxFuelPercentage(int maxFuelPercentage) {
-    this.maxFuelPercentage = maxFuelPercentage;
   }
   
   @PostConstruct
@@ -53,6 +47,7 @@ public class RefuelTest {
     // given
     var licenseNumber = "000-00-000";
     var registedFuelPercent = 5;
+    var fuel = new FuelBoundary(99);
     var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), 
             "Honda", 
             licenseNumber, 
@@ -70,6 +65,7 @@ public class RefuelTest {
     // when
     webClient.put()
             .uri("/{licenseNumber}/refuel", licenseNumber)
+            .bodyValue(fuel)
             .retrieve()
             .bodyToMono(Void.class)
             .log()
@@ -85,6 +81,6 @@ public class RefuelTest {
     
     // then
     assertThat(response.energyPercentage()).isNotEqualTo(registedFuelPercent);
-    assertThat(response.energyPercentage()).isEqualTo(maxFuelPercentage);
+    assertThat(response.energyPercentage()).isEqualTo(fuel.fuelPercentage());
   }
 }

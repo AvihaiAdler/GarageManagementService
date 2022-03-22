@@ -14,6 +14,8 @@ import garage.exceptions.NotFoundException;
 import garage.util.Helper;
 import garage.util.VehicleBoundaryEntityConverter;
 import garage.vehicles.DetailedVehicleBoundary;
+import garage.vehicles.FuelBoundary;
+import garage.vehicles.PressureBoundary;
 import garage.vehicles.VehicleBoundary;
 import garage.vehicles.misc.VehicleTypes;
 import garage.vehicles.misc.Wheel;
@@ -148,8 +150,9 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
-  public void inflateTires(String licenseNumber) {
-    // validity check
+  public void inflateTires(String licenseNumber, PressureBoundary pressure) {
+    // validity checks
+    // license number check
     if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
     }
@@ -159,21 +162,40 @@ public class VehicleServiceImpl implements VehicleService {
             .findByLicenseNumber(licenseNumber)
             .orElseThrow(() -> new NotFoundException("vehicle number " + licenseNumber + " doesn't exists"));
     
+    // pressure checks
+    if(pressure == null || pressure.pressure() == null) {
+      throw new BadRequestException("pressure must not be null");
+    }
+    
+    if(pressure.pressure() < minPressure || pressure.pressure() > vehicleEntity.getMaxTirePressure()) {
+      throw new BadRequestException("invalid pressure value " + pressure.pressure());
+    }
+    
     // inflate the tires (to the maxTirePressure of said vehicle)
     var wheels = vehicleEntity.getWheels()
             .entrySet()
             .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, v -> new Wheel(vehicleEntity.getMaxTirePressure())));  
+            .collect(Collectors.toMap(Map.Entry::getKey, v -> new Wheel(pressure.pressure())));  
     vehicleEntity.setWheels(wheels);
     
     vehiclesDao.save(vehicleEntity);
   }
 
   @Override
-  public void refuel(String licenseNumber) {
-    // validity check
+  public void refuel(String licenseNumber, FuelBoundary fuel) {
+    // validity checks
+    // license number check
     if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
+    }
+    
+    // fuel check
+    if(fuel == null || fuel.fuelPercentage() == null) {
+      throw new BadRequestException("fuel must not be null");
+    } 
+    
+    if(fuel.fuelPercentage() < minPercentage || fuel.fuelPercentage() > maxPercentage) {
+      throw new BadRequestException("invalid fuel percentage value " + fuel.fuelPercentage());
     }
     
     var vehicleEntity = vehiclesDao
@@ -181,7 +203,7 @@ public class VehicleServiceImpl implements VehicleService {
             .orElseThrow(() -> new NotFoundException("vehicle number " + licenseNumber + " doesn't exists"));
     
     // refuel/recharge the vehicle to max
-    vehicleEntity.setEnergyPercentage(maxPercentage);
+    vehicleEntity.setEnergyPercentage(fuel.fuelPercentage());
     
     vehiclesDao.save(vehicleEntity);
   }

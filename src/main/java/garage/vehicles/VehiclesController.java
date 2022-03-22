@@ -48,14 +48,20 @@ public class VehiclesController {
             .toArray(new DetailedVehicleBoundary[0]);
   }
   
-  @PutMapping(path = "/{licenseNumber}/inflate")
-  public void inflateTires(@PathVariable("licenseNumber") String licenseNumber) {
-    vehiclesService.inflateTires(licenseNumber);
+  @PutMapping(path = "/{licenseNumber}/inflate",
+          consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void inflateTires(
+          @PathVariable("licenseNumber") String licenseNumber, 
+          @RequestBody PressureBoundary pressure) {
+    vehiclesService.inflateTires(licenseNumber, pressure);
   }
   
-  @PutMapping(path = "/{licenseNumber}/refuel")
-  public void refuel(@PathVariable("licenseNumber") String licenseNumber) {
-    vehiclesService.refuel(licenseNumber);
+  @PutMapping(path = "/{licenseNumber}/refuel", 
+          consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void refuel(
+          @PathVariable("licenseNumber") String licenseNumber, 
+          @RequestBody FuelBoundary fuel) {
+    vehiclesService.refuel(licenseNumber, fuel);
   }
   
   @DeleteMapping(path = "/{licenseNumber}/delete")
