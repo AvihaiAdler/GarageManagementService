@@ -154,17 +154,17 @@ public class GetAllVehiclesTests {
   }
   
   @Test
-  public void getVehiclesWithInvalidFilter() throws Exception {
+  public void getVehiclesWithInvalidFilterTest() throws Exception {
     // given
     addVehicles();
     
     // and
-    var filterType = "byTirePressure";
+    var invalidFilterType = "byTirePressure";
     
     // when
     // then
     assertThrows(WebClientResponseException.BadRequest.class, () -> webClient.get()
-            .uri("?filterType={filterType}", filterType)
+            .uri("?filterType={filterType}", invalidFilterType)
             .retrieve()
             .bodyToFlux(DetailedVehicleBoundary.class)
             .log()
@@ -173,7 +173,7 @@ public class GetAllVehiclesTests {
   }
   
   @Test
-  public void getRegularCarsWithPagination() throws Exception {
+  public void getRegularCarsWithPaginationTest() throws Exception {
     // given 
     addVehicles();
     
