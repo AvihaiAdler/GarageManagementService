@@ -90,10 +90,10 @@ class AddVehiceTests {
 	  assertThat(response.maxTirePressure()).isEqualTo(vehicleBoundary.maxTirePressure());
 	
 	  // wheels checks
-assertThat(response.wheels()).isNotNull();
-assertThat(response.wheels()).isNotEmpty();
-assertThat(response.wheels().get("wheel_0")).isNotNull();
-assertThat(response.wheels().get("wheel_0").getPressure()).isBetween(minPressure, maxPressure);
+    assertThat(response.wheels()).isNotNull();
+    assertThat(response.wheels()).isNotEmpty();
+    assertThat(response.wheels().get("wheel_0")).isNotNull();
+    assertThat(response.wheels().get("wheel_0").getPressure()).isBetween(minPressure, maxPressure);
 	  
 	  // and
 	  assertThat(vehiclesDao.findAll().size()).isEqualTo(1);
