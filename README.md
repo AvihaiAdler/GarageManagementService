@@ -42,7 +42,7 @@ The endpoint can accepts optional variables to customized the returned data.
   - licenseNumber
   - energy (represent the available energy for a vehicle)
   - maxPressure
-- `order`: the order of the sort. Can be either **ASC** or **DESC** (this argument is case sensitive too)
+- `order`: the order of the sort. Can be either **ASC** or **DESC** (case sensitive)
 
 To summarize if we were to access the endpoint above with the following values:
 
@@ -53,7 +53,7 @@ To summarize if we were to access the endpoint above with the following values:
 - `sortBy = licenseNumber`
 - `order = ASC`
 
-We will get the first page with maximum 5 elements in it all of the model **honda civic** sorted by their license number in ascending order.
+We will get the first page with 5 elements at most, all the elements has the model name of **honda civic** sorted by their license number in ascending order.
 
 #### Building and Running
 
