@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - postgres-volume:/var/lib/postgresql:z # :z to fix an annoying chmod bug
 
 
 volumes:
