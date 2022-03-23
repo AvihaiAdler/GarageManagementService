@@ -18,7 +18,7 @@ import garage.dal.VehiclesDao;
 import garage.util.Helper;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
+import garage.vehicles.VehicleTypeBoundary;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -69,7 +69,7 @@ class AddVehiceTests {
   @Test
 	public void addValidVehicleTest() throws Exception {
 	  // given
-	  var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
+	  var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
 	  
 	  // when
 	  var response = webClient.post()
@@ -102,7 +102,7 @@ class AddVehiceTests {
   @Test
   public void addTruckTest() throws Exception {
     // given
-    var truck = new VehicleBoundary(new VehicleType("Truck", null), "Hyundai", "00-000-00", 20, 50);
+    var truck = new VehicleBoundary(new VehicleTypeBoundary("Truck", null), "Hyundai", "00-000-00", 20, 50);
     
     // when
     var response = webClient.post()
@@ -119,7 +119,7 @@ class AddVehiceTests {
   @Test
   public void addVehicleInvalidTypeTest() throws Exception {
     // given
-    var vehicleBoundary = new VehicleBoundary(new VehicleType("Ship", "Electric"), "Hyundai", "00-000-00", 20, 50);
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("Ship", "Electric"), "Hyundai", "00-000-00", 20, 50);
     
     // when - POSTing the invalid vehicle
     // then - an exception should be thrown
@@ -134,7 +134,7 @@ class AddVehiceTests {
   @Test
   public void addVehicleWithExsistingLicenseNumberTest() throws Exception {
     // given
-    var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
     
     // and
     webClient.post()
@@ -144,7 +144,7 @@ class AddVehiceTests {
             .log()
             .block();
     // and
-    var anotherVehicleBoundary = new VehicleBoundary(new VehicleType("Truck", null), "Man", "00-000-00", 15, 95);
+    var anotherVehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("Truck", null), "Man", "00-000-00", 15, 95);
     
     // when
     // then

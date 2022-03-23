@@ -1,35 +1,37 @@
 package garage.data;
 
-import java.util.Map;
 import java.util.Objects;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import garage.vehicles.misc.Wheel;
 
-@Document(collection = "vehicles")
+@Entity
+@Table(name = "vehicles")
 public class VehicleEntity {
   private String id;
-  private String vehicleType;
-  private String energySource;
-  private Map<String, Wheel> wheels;
+  private String wheels;
   private String modelName;
   private String licenseNumber;
   private int energyPercentage;
   private int maxTirePressure;
   
+  private EnergySource energySource;
+  
+  private VehicleType vehicleType;
+  
   public VehicleEntity() { }
   
-  public VehicleEntity(String vehicleType, 
-          String energySource, 
-          Map<String, Wheel> wheels, 
+  public VehicleEntity(String wheels, 
           String modelName, 
           String licenseNumber, 
           int energyPercentage, 
           int maxTirePressure) {
-    id = null;
-    this.vehicleType = vehicleType;
-    this.energySource = energySource;
     this.wheels = wheels;
     this.modelName = modelName;
     this.licenseNumber = licenseNumber;
@@ -37,36 +39,23 @@ public class VehicleEntity {
     this.maxTirePressure = maxTirePressure;
   }
 
-  @Id
+  
   public String getId() {
     return id;
   }
 
+  @Id
+  @GeneratedValue
   public void setId(String id) {
     this.id = id;
   }
 
-  public String getVehicleType() {
-    return vehicleType;
-  }
-
-  public void setVehicleType(String vehicleType) {
-    this.vehicleType = vehicleType;
-  }
-
-  public String getEnergySource() {
-    return energySource;
-  }
-
-  public void setEnergySource(String energySource) {
-    this.energySource = energySource;
-  }
-
-  public Map<String, Wheel> getWheels() {
+  @Lob
+  public String getWheels() {
     return wheels;
   }
 
-  public void setWheels(Map<String, Wheel> wheels) {
+  public void setWheels(String wheels) {
     this.wheels = wheels;
   }
 
@@ -101,6 +90,26 @@ public class VehicleEntity {
   public void setMaxTirePressure(int maxTirePressure) {
     this.maxTirePressure = maxTirePressure;
   }
+  
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "energy_source")
+  public EnergySource getEnergySource() {
+    return energySource;
+  }
+
+  public void setEnergySource(EnergySource energySource) {
+    this.energySource = energySource;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "vehicle_type")
+  public VehicleType getVehicleType() {
+    return vehicleType;
+  }
+
+  public void setVehicleType(VehicleType vehicleType) {
+    this.vehicleType = vehicleType;
+  }
 
   @Override
   public int hashCode() {
@@ -117,12 +126,5 @@ public class VehicleEntity {
       return false;
     VehicleEntity other = (VehicleEntity) obj;
     return Objects.equals(id, other.id);
-  }
-
-  @Override
-  public String toString() {
-    return "VehiclesEntity [id=" + id + ", vehicleType=" + vehicleType + ", energySource=" + energySource + ", wheels="
-            + wheels + ", modelName=" + modelName + ", licenseNumber=" + licenseNumber + ", availableEnergyPercentage="
-            + energyPercentage + ", maxTirePressure=" + maxTirePressure + "]";
   }
 }

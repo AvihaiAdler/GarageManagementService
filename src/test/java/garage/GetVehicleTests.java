@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
+import garage.vehicles.VehicleTypeBoundary;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -48,7 +48,7 @@ public class GetVehicleTests {
   public void getValidVehicleTest() throws Exception {
     var licenseNumber = "00-000-00";
     // given
-    var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", licenseNumber, 20, 50);
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", licenseNumber, 20, 50);
     // and
     webClient.post()
             .bodyValue(vehicleBoundary)
@@ -75,7 +75,7 @@ public class GetVehicleTests {
   public void notFoundVehicleTest() throws Exception {
     var licenseNumber = "00-010-00";
     // given
-    var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
     // and
     webClient.post()
             .bodyValue(vehicleBoundary)
@@ -98,7 +98,7 @@ public class GetVehicleTests {
   public void getVehicleInvalidLicenseNumberTest() throws Exception {
     var invaliLicenseNumber = "00-00-00";
     // given
-    var vehicleBoundary = new VehicleBoundary(new VehicleType("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
     // and
     webClient.post()
             .bodyValue(vehicleBoundary)

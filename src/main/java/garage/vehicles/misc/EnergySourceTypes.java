@@ -1,6 +1,6 @@
 package garage.vehicles.misc;
 
-public enum EnergySource {
+public enum EnergySourceTypes {
   Electric,
   Regular
 }

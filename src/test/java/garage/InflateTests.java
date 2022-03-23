@@ -17,8 +17,8 @@ import garage.util.Helper;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.PressureBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.EnergySource;
+import garage.vehicles.VehicleTypeBoundary;
+import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -51,7 +51,7 @@ public class InflateTests {
   public void inflateValidPressureTest() throws Exception {
     // given
     var licenseNumber = "000-00-000";
-    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), "Honda", licenseNumber, 5, 55);
+    var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Car.toString(), EnergySourceTypes.Electric.toString()), "Honda", licenseNumber, 5, 55);
     var pressure = new PressureBoundary(50);
     
     // and
@@ -90,7 +90,7 @@ public class InflateTests {
     // given
     var licenseNumber = "000-00-000";
     var originalPressure = 55;
-    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), 
+    var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Car.toString(), EnergySourceTypes.Electric.toString()), 
             "Honda", 
             licenseNumber, 
             5, 

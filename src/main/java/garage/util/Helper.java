@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.EnergySource;
+import garage.vehicles.VehicleTypeBoundary;
+import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
 public class Helper {
@@ -29,7 +29,7 @@ public class Helper {
    * </ul>
    * {@code false} otherwise 
    */
-  public static boolean checkValidVehicleType(VehicleType vehicleType) {
+  public static boolean checkValidVehicleType(VehicleTypeBoundary vehicleType) {
     if(vehicleType == null) return false;
     
     if(vehicleType.getType() == null) return false;
@@ -62,9 +62,9 @@ public class Helper {
   public static boolean checkValidEnergySource(String energySource) {
     if(energySource == null) return false;
     
-    return Arrays.asList(EnergySource.values())
+    return Arrays.asList(EnergySourceTypes.values())
             .stream()
-            .map(EnergySource::toString)
+            .map(EnergySourceTypes::toString)
             .anyMatch(energyType -> energyType.equalsIgnoreCase(energySource));
   }
   

@@ -19,8 +19,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.EnergySource;
+import garage.vehicles.VehicleTypeBoundary;
+import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
 
@@ -42,13 +42,13 @@ public class GetAllVehiclesTests {
     webClient = WebClient.create(baseUrl);
     
     vehicles = List.of(
-            new VehicleBoundary(new VehicleType("truck", null), "Man", "00-000-00", 15, 95),
-            new VehicleBoundary(new VehicleType("car", "electric"), "Hyundai", "00-010-00", 10, 45),
-            new VehicleBoundary(new VehicleType("car", "regular"), "Mazda", "00-020-00", 55, 45),
-            new VehicleBoundary(new VehicleType("car", "regular"), "Hyundai", "00-030-00", 55, 45),
-            new VehicleBoundary(new VehicleType("motorcycle", "electric"), "Honda", "00-040-00", 89, 25),
-            new VehicleBoundary(new VehicleType("motorcycle", "electric"), "Suzuki", "00-050-00", 22, 30),
-            new VehicleBoundary(new VehicleType("motorcycle", "regular"), "Honda", "00-060-00", 47, 22)
+            new VehicleBoundary(new VehicleTypeBoundary("truck", null), "Man", "00-000-00", 15, 95),
+            new VehicleBoundary(new VehicleTypeBoundary("car", "electric"), "Hyundai", "00-010-00", 10, 45),
+            new VehicleBoundary(new VehicleTypeBoundary("car", "regular"), "Mazda", "00-020-00", 55, 45),
+            new VehicleBoundary(new VehicleTypeBoundary("car", "regular"), "Hyundai", "00-030-00", 55, 45),
+            new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "electric"), "Honda", "00-040-00", 89, 25),
+            new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "electric"), "Suzuki", "00-050-00", 22, 30),
+            new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "regular"), "Honda", "00-060-00", 47, 22)
             );
   }
   
@@ -130,15 +130,15 @@ public class GetAllVehiclesTests {
     // and
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
-            .map(VehicleType::getEnergySource)
+            .map(VehicleTypeBoundary::getEnergySource)
             .filter(str -> str != null)
             .map(String::toLowerCase)
-            .filter(Predicate.isEqual(EnergySource.Regular.toString().toLowerCase()))
+            .filter(Predicate.isEqual(EnergySourceTypes.Regular.toString().toLowerCase()))
             .collect(Collectors.toList())
             .size();
     
     var filterType = "byEnergyType";
-    var filterValue = EnergySource.Regular.toString().toLowerCase();
+    var filterValue = EnergySourceTypes.Regular.toString().toLowerCase();
     // when
     var response = webClient.get()
             .uri("?filterType={filterType}&filterValue={filterValue}", filterType, filterValue)
@@ -180,10 +180,10 @@ public class GetAllVehiclesTests {
     // and
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
-            .map(VehicleType::getEnergySource)
+            .map(VehicleTypeBoundary::getEnergySource)
             .filter(str -> str != null)
             .map(String::toLowerCase)
-            .filter(Predicate.isEqual(EnergySource.Regular.toString().toLowerCase()))
+            .filter(Predicate.isEqual(EnergySourceTypes.Regular.toString().toLowerCase()))
             .collect(Collectors.toList())
             .size();
     
@@ -192,7 +192,7 @@ public class GetAllVehiclesTests {
     var expected = numOfRegularVehicles%size;
     
     var filterType = "byEnergyType";
-    var filterValue = EnergySource.Regular.toString().toLowerCase();
+    var filterValue = EnergySourceTypes.Regular.toString().toLowerCase();
     
     // when
     var response = webClient.get()

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import garage.data.VehicleEntity;
 import garage.vehicles.DetailedVehicleBoundary;
 import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
+import garage.vehicles.VehicleTypeBoundary;
 import garage.vehicles.misc.VehicleTypes;
 import garage.vehicles.misc.Wheel;
 
@@ -25,7 +25,7 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
   
   @Override
   public DetailedVehicleBoundary toBoundary(VehicleEntity entity) {
-    return new DetailedVehicleBoundary(new VehicleType(entity.getVehicleType(), entity.getEnergySource()), 
+    return new DetailedVehicleBoundary(new VehicleTypeBoundary(entity.getVehicleType(), entity.getEnergySource()), 
             entity.getWheels(), 
             entity.getModelName(), 
             entity.getLicenseNumber(), 
@@ -78,7 +78,7 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
    * @param vehicleType : {@code VehicleType}
    * @return {@code VehicleTypes} enum type
    */
-  private VehicleTypes getTypeAsEnum(VehicleType vehicleType) {
+  private VehicleTypes getTypeAsEnum(VehicleTypeBoundary vehicleType) {
     return switch(vehicleType.getType().toLowerCase()) {
       case "truck" -> VehicleTypes.Truck;
       case "car" -> VehicleTypes.Car;
