@@ -26,9 +26,9 @@ dependencies {
 }
 
 test {
-  environment "POSTGRES_PASSWORD", "password"
-  environment "POSTGRES_USERNAME", "root"
-  environment "POSTGRES_URI", "jdbc:postgresql://db:5432/compose-postgres"
+  systemProperties = ['POSTGRES_PASSWORD': 'password', 'POSTGRES_USERNAME': 'postgers', 'POSTGRES_URI': 'jdbc:postgresql://localhost:5432/postgres']
+
+  //environment env
 }
 
 tasks.named('test') {
