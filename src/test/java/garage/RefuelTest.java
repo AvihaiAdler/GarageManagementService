@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.FuelBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleTypeBoundary;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.FuelBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
 import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 

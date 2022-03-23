@@ -1,4 +1,4 @@
-package garage.logic;
+package garage.vehicles;
 
 import java.util.List;
 import java.util.Map;
@@ -7,31 +7,45 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import garage.dal.VehiclesDao;
 import garage.exceptions.BadRequestException;
 import garage.exceptions.ConflictException;
 import garage.exceptions.NotFoundException;
-import garage.util.Helper;
+import garage.logic.EnergySourceService;
+import garage.logic.VehicleService;
+import garage.logic.VehicleTypeService;
+import garage.util.Util;
 import garage.util.VehicleBoundaryEntityConverter;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.FuelBoundary;
-import garage.vehicles.PressureBoundary;
-import garage.vehicles.VehicleBoundary;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.FuelBoundary;
+import garage.vehicles.boundaries.PressureBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
 import garage.vehicles.misc.VehicleTypes;
 import garage.vehicles.misc.Wheel;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
   private VehicleBoundaryEntityConverter boundaryEntityConverter;
+  private VehicleTypeService vehicleTypeService;
+  private EnergySourceService energySourceService;
   private VehiclesDao vehiclesDao;
+  private Util util;
   private int maxPercentage;
   private int minPercentage;
   private int maxPressure;
   private int minPressure;
   
-  public VehicleServiceImpl(VehicleBoundaryEntityConverter boundaryEntityConverter, VehiclesDao vehiclesDao) {
+  public VehicleServiceImpl(VehicleBoundaryEntityConverter boundaryEntityConverter, 
+          VehicleTypeService vehicleTypeService,
+          EnergySourceService energySourceService,
+          VehiclesDao vehiclesDao,
+          Util util) {
     this.boundaryEntityConverter = boundaryEntityConverter;
-    this.vehiclesDao = vehiclesDao;    
+    this.vehicleTypeService = vehicleTypeService;
+    this.energySourceService = energySourceService;
+    this.vehiclesDao = vehiclesDao;   
+    this.util = util;
   }
   
   @Value("${max.percent:100}")
@@ -55,56 +69,68 @@ public class VehicleServiceImpl implements VehicleService {
   }
   
   @Override
+  @Transactional
   public DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary) {
-    // validity checks:
-    // VehicleType check
-    if(Helper.checkValidVehicleType(vehicleBoundary.vehicleType()) == false) {
-      throw new BadRequestException("invalid vehicle type " + vehicleBoundary.vehicleType());
+    try {
+      // validity checks:
+      // VehicleType check
+      var vehicleType = util.getTypeAsEnum(vehicleBoundary.vehicleType());
+      
+      // Model check
+      if(vehicleBoundary.modelName() == null) {
+        throw new BadRequestException("vehicle model name must not be null");
+      }
+      
+      // Energy percentage check
+      if(vehicleBoundary.energyPercentage() != null && vehicleBoundary.energyPercentage() < minPercentage) {
+        throw new BadRequestException("invalid energy % " + vehicleBoundary.energyPercentage());
+      }
+      
+      // Max tire pressure check
+      if(vehicleBoundary.maxTirePressure() == null) {
+        throw new BadRequestException("maximum tire pressure must not be null"); 
+      }
+      
+      // Max tire pressure check
+      if(vehicleBoundary.maxTirePressure() < minPressure || vehicleBoundary.maxTirePressure() > maxPressure) {
+        throw new BadRequestException("invalid maximum tire pressure " + vehicleBoundary.maxTirePressure());
+      }
+         
+      // License number check
+      if(util.checkValidLicenseNumber(vehicleBoundary.licenseNumber()) == false) {
+        throw new BadRequestException("invalid license number " + vehicleBoundary.licenseNumber());
+      }
+      
+      // Vehicle already exists
+      vehiclesDao.findByLicenseNumber(vehicleBoundary.licenseNumber()).ifPresent(value -> {
+        throw new ConflictException("vehicle number " + vehicleBoundary.licenseNumber() + " already exists");
+      });
+      
+      // create a vehicle entity and save it
+      var vehicleEntity = boundaryEntityConverter.toEntity(vehicleBoundary);
+      
+      // link the vehicle against its type
+      vehicleTypeService.linkVehicleToService(vehicleEntity, vehicleType);
+           
+      // link the vehicle against its energy source
+      if(vehicleType != VehicleTypes.Truck) {
+        energySourceService.linkVehicleToSource(vehicleEntity, util.getEnergySourceAsEnum(vehicleBoundary.vehicleType()));
+      }
+      
+      // save the vehicle
+      return boundaryEntityConverter.toBoundary(vehiclesDao.save(vehicleEntity));
+    } catch (NullPointerException np) {
+      throw new BadRequestException(np);
+    } catch (IllegalArgumentException il) {
+      throw new BadRequestException(il);
     }
-    
-    // Model check
-    if(vehicleBoundary.modelName() == null) {
-      throw new BadRequestException("vehicle model name must not be null");
-    }
-    
-    // License number check
-    if(Helper.checkValidLicenseNumber(vehicleBoundary.licenseNumber()) == false) {
-      throw new BadRequestException("invalid license number " + vehicleBoundary.licenseNumber());
-    }
-    
-    // Energy percentage check
-    if(vehicleBoundary.energyPercentage() != null && vehicleBoundary.energyPercentage() < minPercentage) {
-      throw new BadRequestException("invalid energy % " + vehicleBoundary.energyPercentage());
-    }
-    
-    // Max tire pressure check
-    if(vehicleBoundary.maxTirePressure() == null) {
-      throw new BadRequestException("maximum tire pressure must not be null"); 
-    }
-    
-    // Max tire pressure check
-    if(vehicleBoundary.maxTirePressure() < minPressure || vehicleBoundary.maxTirePressure() > maxPressure) {
-      throw new BadRequestException("invalid maximum tire pressure " + vehicleBoundary.maxTirePressure());
-    }
-    
-    // Vehicle already exists
-    vehiclesDao.findByLicenseNumber(vehicleBoundary.licenseNumber()).ifPresent(value -> {
-      throw new ConflictException("vehicle number " + vehicleBoundary.licenseNumber() + " already exists");
-    });
-    
-    // if truck - override it's energySource to null
-    if(vehicleBoundary.vehicleType().getType().equalsIgnoreCase(VehicleTypes.Truck.toString())) {
-      vehicleBoundary.vehicleType().setEnergySource(null);
-    }
-    
-    var entity =  vehiclesDao.save(boundaryEntityConverter.toEntity(vehicleBoundary));
-    return boundaryEntityConverter.toBoundary(entity);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public DetailedVehicleBoundary getVehicle(String licenseNumber) {
     // validity check
-    if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
+    if(util.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
     }
     
@@ -116,6 +142,7 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<DetailedVehicleBoundary> getAllVehicles(String filterType, String filterValue, int size, int page, String sortBy, String order) {   
     // extract the actual sortParam
     var sortParam = getSortParam(sortBy);
@@ -124,36 +151,24 @@ public class VehicleServiceImpl implements VehicleService {
     var direction = getDirection(order);
     
     // return the result/s based on the params
-    return switch (filterType) {
-      case "" -> vehiclesDao
-              .findAll(PageRequest.of(page, size, direction, sortParam))
-              .stream()
-              .map(boundaryEntityConverter::toBoundary)
-              .collect(Collectors.toList());
-      case "byEnergyType" -> vehiclesDao
-              .findAllByEnergySource(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam))
-              .stream()
-              .map(boundaryEntityConverter::toBoundary)
-              .collect(Collectors.toList());
-      case "byModelName" -> vehiclesDao
-              .findAllByModelName(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam))
-              .stream()
-              .map(boundaryEntityConverter::toBoundary)
-              .collect(Collectors.toList());
-      case "byVehicleType" -> vehiclesDao
-              .findAllByVehicleType(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam))
-              .stream()
-              .map(boundaryEntityConverter::toBoundary)
-              .collect(Collectors.toList());
+    var results = switch (filterType) {
+      case "" -> vehiclesDao.findAll(PageRequest.of(page, size, direction, sortParam));             
+      case "byEnergyType" -> vehiclesDao.findAllByEnergySource_energyType(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam));
+      case "byModelName" -> vehiclesDao.findAllByModelName(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam));
+      case "byVehicleType" -> vehiclesDao.findAllByVehicleType_vehicleType(filterValue.toLowerCase(), PageRequest.of(page, size, direction, sortParam));
       default -> throw new BadRequestException("inavlid filter type " + filterType);
     };
+    return results.stream()
+            .map(boundaryEntityConverter::toBoundary)
+            .collect(Collectors.toList());
   }
 
   @Override
+  @Transactional
   public void inflateTires(String licenseNumber, PressureBoundary pressure) {
     // validity checks
     // license number check
-    if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
+    if(util.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
     }
     
@@ -172,20 +187,21 @@ public class VehicleServiceImpl implements VehicleService {
     }
     
     // inflate the tires (to the maxTirePressure of said vehicle)
-    var wheels = vehicleEntity.getWheels()
+    var wheels = boundaryEntityConverter.jsonToMap(vehicleEntity.getWheels())
             .entrySet()
             .stream()
             .collect(Collectors.toMap(Map.Entry::getKey, v -> new Wheel(pressure.pressure())));  
-    vehicleEntity.setWheels(wheels);
+    vehicleEntity.setWheels(boundaryEntityConverter.mapToJson(wheels));
     
     vehiclesDao.save(vehicleEntity);
   }
 
   @Override
+  @Transactional
   public void refuel(String licenseNumber, FuelBoundary fuel) {
     // validity checks
     // license number check
-    if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
+    if(util.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
     }
     
@@ -209,9 +225,10 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
+  @Transactional
   public void delete(String licenseNumber) {
     // validity check
-    if(Helper.checkValidLicenseNumber(licenseNumber) == false) {
+    if(util.checkValidLicenseNumber(licenseNumber) == false) {
       throw new BadRequestException("invalid license number " + licenseNumber);
     }
     
@@ -223,6 +240,7 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
+  @Transactional
   public void deleteAllVehicles() {
     vehiclesDao.deleteAll();
   }

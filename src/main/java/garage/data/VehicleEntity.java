@@ -1,11 +1,9 @@
 package garage.data;
 
 import java.util.Objects;
+import java.util.UUID;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,16 +12,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "vehicles")
 public class VehicleEntity {
+  @Id
   private String id;
+  
+  @Lob
   private String wheels;
   private String modelName;
   private String licenseNumber;
   private int energyPercentage;
   private int maxTirePressure;
   
-  private EnergySource energySource;
+  @ManyToOne
+  private EnergySourceEntity energySource;
   
-  private VehicleType vehicleType;
+  @ManyToOne
+  private VehicleTypeEntity vehicleType;
   
   public VehicleEntity() { }
   
@@ -32,6 +35,7 @@ public class VehicleEntity {
           String licenseNumber, 
           int energyPercentage, 
           int maxTirePressure) {
+    id = UUID.randomUUID().toString();
     this.wheels = wheels;
     this.modelName = modelName;
     this.licenseNumber = licenseNumber;
@@ -44,13 +48,10 @@ public class VehicleEntity {
     return id;
   }
 
-  @Id
-  @GeneratedValue
   public void setId(String id) {
     this.id = id;
   }
 
-  @Lob
   public String getWheels() {
     return wheels;
   }
@@ -91,23 +92,19 @@ public class VehicleEntity {
     this.maxTirePressure = maxTirePressure;
   }
   
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "energy_source")
-  public EnergySource getEnergySource() {
+  public EnergySourceEntity getEnergySource() {
     return energySource;
   }
 
-  public void setEnergySource(EnergySource energySource) {
+  public void setEnergySource(EnergySourceEntity energySource) {
     this.energySource = energySource;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "vehicle_type")
-  public VehicleType getVehicleType() {
+  public VehicleTypeEntity getVehicleType() {
     return vehicleType;
   }
 
-  public void setVehicleType(VehicleType vehicleType) {
+  public void setVehicleType(VehicleTypeEntity vehicleType) {
     this.vehicleType = vehicleType;
   }
 
@@ -126,5 +123,12 @@ public class VehicleEntity {
       return false;
     VehicleEntity other = (VehicleEntity) obj;
     return Objects.equals(id, other.id);
+  }
+
+  @Override
+  public String toString() {
+    return "VehicleEntity [id=" + id + ", wheels=" + wheels + ", modelName=" + modelName + ", licenseNumber="
+            + licenseNumber + ", energyPercentage=" + energyPercentage + ", maxTirePressure=" + maxTirePressure
+            + ", energySource=" + energySource + ", vehicleType=" + vehicleType + "]";
   }
 }

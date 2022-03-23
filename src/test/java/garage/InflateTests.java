@@ -2,22 +2,20 @@ package garage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import javax.annotation.PostConstruct;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import garage.util.Helper;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.PressureBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleTypeBoundary;
+import garage.util.Util;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.PressureBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
 import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
@@ -26,6 +24,12 @@ public class InflateTests {
   private int port;
   private String baseUrl;
   private WebClient webClient;
+  private Util util;
+  
+  @Autowired
+  public void setUtil(Util util) {
+    this.util = util;
+  }
   
   @LocalServerPort
   public void setPort(int port) {
@@ -80,7 +84,7 @@ public class InflateTests {
             .block();
     
     // then
-    for(int i = 0; i < Helper.TYPES.get(VehicleTypes.Car); i++) {
+    for(int i = 0; i < util.getNumberOfWheels(VehicleTypes.Car); i++) {
       assertThat(response.wheels().get("wheel_" + i).getPressure()).isEqualTo(pressure.pressure());      
     }
   }
@@ -124,7 +128,7 @@ public class InflateTests {
             .block();
     
     // and
-    for(int i = 0; i < Helper.TYPES.get(VehicleTypes.Car); i++) {
+    for(int i = 0; i < util.getNumberOfWheels(VehicleTypes.Car); i++) {
       assertThat(response.wheels().get("wheel_" + i).getPressure()).isNotEqualTo(invalidPressure.pressure()); 
     }
   }

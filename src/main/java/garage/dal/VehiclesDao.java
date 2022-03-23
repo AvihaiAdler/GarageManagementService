@@ -12,11 +12,9 @@ public interface VehiclesDao extends PagingAndSortingRepository<VehicleEntity, S
   
   public Optional<VehicleEntity> findByLicenseNumber(@Param("licenseNumber") String licenseNumber);
   
-  // ?
-  public Page<VehicleEntity> findAllByVehicleType(@Param("vehicleType") String vehicleType, Pageable page);
-  
-  // ?
-  public Page<VehicleEntity> findAllByEnergySource(@Param("energySource") String energySource, Pageable page);
+  public Page<VehicleEntity> findAllByVehicleType_vehicleType(@Param("type") String type, Pageable page);
+
+  public Page<VehicleEntity> findAllByEnergySource_energyType(@Param("type") String type, Pageable page);
   
   public Page<VehicleEntity> findAllByModelName(@Param("modelName") String modelName, Pageable page);
 }

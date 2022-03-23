@@ -1,4 +1,4 @@
-package garage.vehicles;
+package garage.vehicles.boundaries;
 
 import java.util.Map;
 

@@ -17,13 +17,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
-  runtimeOnly 'com.h2database:h2'
+
+  runtimeOnly 'org.postgresql:postgresql:42.3.3'
+  
+  //runtimeOnly 'com.h2database:h2'
   
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-  environment "MONGO_CRED", "mongodb://localhost:27017"
+  environment "POSTGRES_PASSWORD", "password"
+  environment "POSTGRES_USERNAME", "root"
+  environment "POSTGRES_URI", "jdbc:postgresql://db:5432/compose-postgres"
 }
 
 tasks.named('test') {

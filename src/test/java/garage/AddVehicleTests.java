@@ -2,9 +2,7 @@ package garage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import javax.annotation.PostConstruct;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +13,30 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import garage.dal.VehiclesDao;
-import garage.util.Helper;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleTypeBoundary;
+import garage.util.Util;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AddVehiceTests {
+class AddVehicleTests {
   private int port;
   private String baseUrl;
   private WebClient webClient;
   private VehiclesDao vehiclesDao;
+  private Util util;
   private int minPressure;
   private int maxPressure;
-  
+
   @Autowired
   public void setVehiclesDao(VehiclesDao vehiclesDao) {
     this.vehiclesDao = vehiclesDao;
+  }
+  
+  @Autowired
+  public void setUtil(Util util) {
+    this.util = util;
   }
   
   @LocalServerPort
@@ -67,37 +71,39 @@ class AddVehiceTests {
   }
 
   @Test
-	public void addValidVehicleTest() throws Exception {
-	  // given
-	  var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20, 50);
-	  
-	  // when
-	  var response = webClient.post()
-	          .bodyValue(vehicleBoundary)
-	          .retrieve()
-	          .bodyToMono(DetailedVehicleBoundary.class)
-	          .log()
-	          .block();
-	  
-	  // then
-	  assertThat(response).isNotNull();
-	  assertThat(response.vehicleType().getType()).isEqualTo(vehicleBoundary.vehicleType().getType().toLowerCase());
-	  assertThat(response.vehicleType().getEnergySource()).isEqualTo(vehicleBoundary.vehicleType().getEnergySource().toLowerCase());
-	  assertThat(response.wheels().size()).isEqualTo(Helper.TYPES.get(VehicleTypes.Car));
-	  assertThat(response.modelName()).isEqualTo(vehicleBoundary.modelName().toLowerCase());
-	  assertThat(response.licenseNumber()).isEqualTo(vehicleBoundary.licenseNumber());
-	  assertThat(response.energyPercentage()).isEqualTo(vehicleBoundary.energyPercentage());
-	  assertThat(response.maxTirePressure()).isEqualTo(vehicleBoundary.maxTirePressure());
-	
-	  // wheels checks
+  public void addValidVehicleTest() throws Exception {
+    // given
+    var vehicleBoundary = new VehicleBoundary(new VehicleTypeBoundary("car", "Electric"), "Hyundai", "00-000-00", 20,
+            50);
+
+    // when
+    var response = webClient.post()
+            .bodyValue(vehicleBoundary)
+            .retrieve()
+            .bodyToMono(DetailedVehicleBoundary.class)
+            .log()
+            .block();
+
+    // then
+    assertThat(response).isNotNull();
+    assertThat(response.vehicleType().getType()).isEqualTo(vehicleBoundary.vehicleType().getType().toLowerCase());
+    assertThat(response.vehicleType().getEnergySource())
+            .isEqualTo(vehicleBoundary.vehicleType().getEnergySource().toLowerCase());
+    assertThat(response.wheels().size()).isEqualTo(util.getNumberOfWheels(VehicleTypes.Car));
+    assertThat(response.modelName()).isEqualTo(vehicleBoundary.modelName().toLowerCase());
+    assertThat(response.licenseNumber()).isEqualTo(vehicleBoundary.licenseNumber());
+    assertThat(response.energyPercentage()).isEqualTo(vehicleBoundary.energyPercentage());
+    assertThat(response.maxTirePressure()).isEqualTo(vehicleBoundary.maxTirePressure());
+
+    // wheels checks
     assertThat(response.wheels()).isNotNull();
     assertThat(response.wheels()).isNotEmpty();
     assertThat(response.wheels().get("wheel_0")).isNotNull();
     assertThat(response.wheels().get("wheel_0").getPressure()).isBetween(minPressure, maxPressure);
-	  
-	  // and
-	  assertThat(vehiclesDao.findAll().size()).isEqualTo(1);
-	}
+
+    // and
+    assertThat(vehiclesDao.count()).isEqualTo(1);
+  }
   
   @Test
   public void addTruckTest() throws Exception {

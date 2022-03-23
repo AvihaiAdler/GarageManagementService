@@ -2,24 +2,21 @@ package garage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
-
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleTypeBoundary;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
 import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
@@ -48,8 +45,18 @@ public class GetAllVehiclesTests {
             new VehicleBoundary(new VehicleTypeBoundary("car", "regular"), "Hyundai", "00-030-00", 55, 45),
             new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "electric"), "Honda", "00-040-00", 89, 25),
             new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "electric"), "Suzuki", "00-050-00", 22, 30),
-            new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "regular"), "Honda", "00-060-00", 47, 22)
-            );
+            new VehicleBoundary(new VehicleTypeBoundary("motorcycle", "regular"), "Honda", "00-060-00", 47, 22));
+  }
+  
+  @BeforeEach
+  public void populateDb() {
+    vehicles.forEach(vehicle -> {
+      webClient.post()
+              .bodyValue(vehicle)
+              .retrieve()
+              .bodyToMono(DetailedVehicleBoundary.class)
+              .block();
+    });
   }
   
   @AfterEach
@@ -61,30 +68,16 @@ public class GetAllVehiclesTests {
             .block();
   }
   
-  private void addVehicles() {
-    vehicles.forEach(vehicle -> {
-      webClient.post()
-              .bodyValue(vehicle)
-              .retrieve()
-              .bodyToMono(DetailedVehicleBoundary.class)
-              .block();
-    });
-  }
-  
   @Test
   public void getAllVehiclesNoFilterDefaultSortTest() throws Exception {
-    // given
-    addVehicles();
-    
+    // given    
     var sortBy = "licenseNumber";
-    var size = 20;
     
     // when
     var response = webClient.get()
             .uri("?sortBy={sortBy}", sortBy)
             .retrieve()
             .bodyToFlux(DetailedVehicleBoundary.class)
-            .take(size)
             .log()
             .collectList()
             .block();
@@ -99,9 +92,6 @@ public class GetAllVehiclesTests {
   @Test
   public void getCarsTest() throws Exception {
     // given
-    addVehicles();
-    
-    // and
     var numOfCars = vehicles.stream()
             .filter(vehicle -> vehicle.vehicleType().getType().equalsIgnoreCase(VehicleTypes.Car.toString()))
             .collect(Collectors.toList())
@@ -126,8 +116,6 @@ public class GetAllVehiclesTests {
   @Test
   public void getRegularVehiclesTest() throws Exception {
     // given
-    addVehicles();
-    // and
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
             .map(VehicleTypeBoundary::getEnergySource)
@@ -156,9 +144,6 @@ public class GetAllVehiclesTests {
   @Test
   public void getVehiclesWithInvalidFilterTest() throws Exception {
     // given
-    addVehicles();
-    
-    // and
     var invalidFilterType = "byTirePressure";
     
     // when
@@ -175,9 +160,6 @@ public class GetAllVehiclesTests {
   @Test
   public void getRegularCarsWithPaginationTest() throws Exception {
     // given 
-    addVehicles();
-    
-    // and
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
             .map(VehicleTypeBoundary::getEnergySource)
