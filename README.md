@@ -25,10 +25,10 @@ The service provide the following utilities:
 
 #### Paging and sorting
 
-The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `DetailedVehicle` boundaries which represent 1 Page of 20 size with default sort parameters.
-The endpoint can accepts optional variables to customized the returned data.
+The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `DetailedVehicle` boundaries which represent a Page of 20 elements with default sort parameters.
+The endpoint will accept optional variables to further customize the returned data.
 
-- `filterType`: will invoke a query based on it's value. Permitted values are (all values are case sensitive):
+- `filterType`: will invoke a query based on its value. Permitted values are (all values are case sensitive):
   - none (i.e. empty String)
   - byEnergyType
   - byModelName
