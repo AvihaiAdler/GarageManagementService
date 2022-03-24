@@ -21,7 +21,7 @@ public class EnergySourceEntity {
   
   @OneToMany(fetch = FetchType.LAZY, 
           mappedBy = "energySource", 
-          cascade = CascadeType.MERGE)
+          cascade = CascadeType.ALL)
   private Set<VehicleEntity> vehicles;
 
   public EnergySourceEntity() { 
