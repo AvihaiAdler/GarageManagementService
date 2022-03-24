@@ -106,7 +106,7 @@ public class VehicleServiceImpl implements VehicleService {
         throw new ConflictException("vehicle number " + vehicleBoundary.licenseNumber() + " already exists");
       });
       
-      // create a vehicle entity and save it
+      // create a vehicle entity
       var vehicleEntity = boundaryEntityConverter.toEntity(vehicleBoundary);
       
       // link the vehicle against its type
