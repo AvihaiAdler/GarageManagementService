@@ -1,6 +1,6 @@
 ### Garage Management Service
 
-is a simple service simulating a garage management system. The service is written in Java with Spring Boot, and uses PosgreSQL as its database. The data model for this specific instance looks like ![this](https://cdn.discordapp.com/attachments/956515259307405332/956515301283999754/Relational.png)  
+is a simple service simulating a garage management system. The service is written in Java with Spring Boot, and uses PosgreSQL as its database. The data model for this specific instance looks like ![this](https://cdn.discordapp.com/attachments/956515259307405332/956519093421355048/relational_model.png)  
 The service provide the following utilities:
 
 - add a vehicle to the garage
