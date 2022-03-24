@@ -1,6 +1,6 @@
-package garage.vehicles;
+package garage.vehicles.boundaries;
 
-public record VehicleBoundary (VehicleType vehicleType,
+public record VehicleBoundary (VehicleTypeBoundary vehicleType,
         String modelName,
         String licenseNumber,
         Integer energyPercentage,

@@ -2,9 +2,7 @@ package garage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import javax.annotation.PostConstruct;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,11 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.EnergySource;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
+import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -50,7 +47,7 @@ public class DeleteVehicleTest {
   public void deleteVehicleTest() throws Exception {
     // given
     var licenseNumber = "000-00-000";
-    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Motorcycle.toString(), EnergySource.Regular.toString()),
+    var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Motorcycle.toString(), EnergySourceTypes.Regular.toString()),
             "Suzuki",
             licenseNumber,
             90,
@@ -87,7 +84,7 @@ public class DeleteVehicleTest {
     // given
     var originalLicenseNumber = "000-00-000";
     var anotherLicenseNumber = "00-000-00";
-    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Motorcycle.toString(), EnergySource.Regular.toString()),
+    var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Motorcycle.toString(), EnergySourceTypes.Regular.toString()),
             "Suzuki",
             originalLicenseNumber,
             90,

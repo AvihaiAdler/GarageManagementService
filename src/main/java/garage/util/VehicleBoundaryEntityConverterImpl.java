@@ -1,4 +1,5 @@
 package garage.util;
+
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -6,17 +7,27 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import garage.data.VehicleEntity;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.VehicleTypes;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
 import garage.vehicles.misc.Wheel;
 
 @Component
 public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntityConverter { 
-  private final Random rand = new Random();
+  private final ObjectMapper jackson;
+  private final Random rand;
+  private Util util;
   private int minPressure;
+  
+  public VehicleBoundaryEntityConverterImpl(Util util) {
+    rand = new Random();
+    jackson = new ObjectMapper();
+    this.util = util;
+  }
   
   @Value("${min.pressure:0}")
   public void setMinPressure(int minPressure) {
@@ -25,8 +36,12 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
   
   @Override
   public DetailedVehicleBoundary toBoundary(VehicleEntity entity) {
-    return new DetailedVehicleBoundary(new VehicleType(entity.getVehicleType(), entity.getEnergySource()), 
-            entity.getWheels(), 
+    String energySource = null;
+    if(entity.getEnergySource() != null) {
+      energySource = entity.getEnergySource().getEnergyType();
+    }
+    return new DetailedVehicleBoundary(new VehicleTypeBoundary(entity.getVehicleType().getVehicleType(), energySource), 
+            jsonToMap(entity.getWheels()), 
             entity.getModelName(), 
             entity.getLicenseNumber(), 
             entity.getEnergyPercentage(), 
@@ -40,18 +55,29 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
     // treat null energyPercantage value as 0
     if(energyPercantage == null) energyPercantage = 0;
     
-    String energySource = null;
-    if(getTypeAsEnum(boundary.vehicleType()) != VehicleTypes.Truck) {
-      energySource = boundary.vehicleType().getEnergySource().toLowerCase();
-    }
-    
-    return new VehicleEntity(boundary.vehicleType().getType().toLowerCase(), 
-            energySource, 
-            getWheels(boundary), 
+    return new VehicleEntity(mapToJson(getWheels(boundary)), 
             boundary.modelName().toLowerCase(), 
             boundary.licenseNumber(), 
             energyPercantage, 
             boundary.maxTirePressure());
+  }
+
+  @Override
+  public Map<String, Wheel> jsonToMap(String wheels) {
+    try {
+      return jackson.readValue(wheels, new TypeReference<Map<String, Wheel>>() {});
+    } catch (JsonProcessingException jp) {
+      throw new RuntimeException(jp);
+    }
+  }
+
+  @Override
+  public String mapToJson(Map<String, Wheel> wheels) {
+    try {
+      return jackson.writeValueAsString(wheels);
+    }catch (JsonProcessingException je) {
+      throw new RuntimeException(je);
+    }
   }
   
   /**
@@ -60,7 +86,8 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
    * @return {@code Map<String, Wheel>}
    */
   private Map<String, Wheel> getWheels(VehicleBoundary boundary) {
-    var numOfWheels = Helper.TYPES.get(getTypeAsEnum(boundary.vehicleType()));
+    var type = util.getTypeAsEnum(boundary.vehicleType());
+    var numOfWheels = util.getNumberOfWheels(type);
     
     // create a Map of wheels. Map structure represent the wheel & it's current pressure percentage,
     // i.e. (wheel_0, 0), (wheel_3, 50) and so on
@@ -70,20 +97,5 @@ public class VehicleBoundaryEntityConverterImpl implements VehicleBoundaryEntity
                     v -> new Wheel(rand.nextInt(boundary.maxTirePressure() - minPressure + 1) + minPressure), 
                     (k1, k2) -> k2, 
                     TreeMap::new));
-  }
-  
-  /**
-   * Converts a {@code VehicleType::getType} to it's correspondence {@code VehicleTypes} enum. <br>
-   * Throws {@code IllegalArgumentException} for invalid {@code VehicleType::getType}
-   * @param vehicleType : {@code VehicleType}
-   * @return {@code VehicleTypes} enum type
-   */
-  private VehicleTypes getTypeAsEnum(VehicleType vehicleType) {
-    return switch(vehicleType.getType().toLowerCase()) {
-      case "truck" -> VehicleTypes.Truck;
-      case "car" -> VehicleTypes.Car;
-      case "motorcycle" -> VehicleTypes.Motorcycle;
-      default -> throw new IllegalArgumentException("invalid vehicle type " + vehicleType.getType().toLowerCase());
-    };
   }
 }

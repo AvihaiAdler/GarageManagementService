@@ -1,11 +1,10 @@
 package garage.logic;
 
 import java.util.List;
-
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.FuelBoundary;
-import garage.vehicles.PressureBoundary;
-import garage.vehicles.VehicleBoundary;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.FuelBoundary;
+import garage.vehicles.boundaries.PressureBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
 
 public interface VehicleService {
   public DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary);

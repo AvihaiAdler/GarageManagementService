@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
-import garage.vehicles.DetailedVehicleBoundary;
-import garage.vehicles.FuelBoundary;
-import garage.vehicles.VehicleBoundary;
-import garage.vehicles.VehicleType;
-import garage.vehicles.misc.EnergySource;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.FuelBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
+import garage.vehicles.boundaries.VehicleTypeBoundary;
+import garage.vehicles.misc.EnergySourceTypes;
 import garage.vehicles.misc.VehicleTypes;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -48,7 +48,7 @@ public class RefuelTest {
     var licenseNumber = "000-00-000";
     var registedFuelPercent = 5;
     var fuel = new FuelBoundary(99);
-    var vehicle = new VehicleBoundary(new VehicleType(VehicleTypes.Car.toString(), EnergySource.Electric.toString()), 
+    var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Car.toString(), EnergySourceTypes.Electric.toString()), 
             "Honda", 
             licenseNumber, 
             registedFuelPercent, 

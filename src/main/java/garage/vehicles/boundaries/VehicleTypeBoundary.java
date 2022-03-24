@@ -1,14 +1,14 @@
-package garage.vehicles;
+package garage.vehicles.boundaries;
 
 import java.util.Objects;
 
-public class VehicleType {
+public class VehicleTypeBoundary {
   private String type;
   private String energySource;
   
-  public VehicleType() { }
+  public VehicleTypeBoundary() { }
 
-  public VehicleType(String type, String energySource) {
+  public VehicleTypeBoundary(String type, String energySource) {
     this.type = type;
     this.energySource = energySource;
   }
@@ -42,7 +42,7 @@ public class VehicleType {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    VehicleType other = (VehicleType) obj;
+    VehicleTypeBoundary other = (VehicleTypeBoundary) obj;
     return Objects.equals(energySource, other.energySource) && Objects.equals(type, other.type);
   }
 

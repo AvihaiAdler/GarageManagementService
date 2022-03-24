@@ -13,17 +13,22 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+  runtimeOnly 'org.postgresql:postgresql:42.3.3'
   
+  //runtimeOnly 'com.h2database:h2'
   
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-  environment "MONGO_CRED", "mongodb://localhost:27017"
+  systemProperties = ['POSTGRES_PASSWORD': 'password', 'POSTGRES_USERNAME': 'postgers', 'POSTGRES_URI': 'jdbc:postgresql://localhost:5432/postgres']
+
+  //environment env
 }
 
 tasks.named('test') {

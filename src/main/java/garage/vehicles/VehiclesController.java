@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import garage.logic.VehicleService;
+import garage.vehicles.boundaries.DetailedVehicleBoundary;
+import garage.vehicles.boundaries.FuelBoundary;
+import garage.vehicles.boundaries.PressureBoundary;
+import garage.vehicles.boundaries.VehicleBoundary;
 
 @RestController
 @RequestMapping(path = "/api/v1/vehicles")
