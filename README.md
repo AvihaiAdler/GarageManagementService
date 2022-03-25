@@ -1,6 +1,6 @@
 ### Garage Management Service
 
-is a simple service simulating a garage management system. The service is written in Java with Spring Boot, and uses PosgreSQL as its database. The data model for this specific instance looks like ![this](https://cdn.discordapp.com/attachments/956515259307405332/956519093421355048/relational_model.png)  
+is a simple service simulating a garage management system. The service is written in Java with Spring Boot, and uses PostgresSQL as its database. The data model for this specific instance looks like ![this](https://cdn.discordapp.com/attachments/956515259307405332/956519093421355048/relational_model.png)  
 The service provide the following utilities:
 
 - add a vehicle to the garage
@@ -14,7 +14,7 @@ The service provide the following utilities:
 ### Functionality
 
 | description                           | method     | endpoint                                   | input               | output                              |
-| ------------------------------------- | ---------- | ------------------------------------------ | ------------------- | ----------------------------------- |
+|---------------------------------------|------------|--------------------------------------------|---------------------|-------------------------------------|
 | add a vehicle to the garage           | **POST**   | `/api/v1/vehicles`                         | `Vehicle` boundary  | `DetailedVehicle` boundary          |
 | retrieve a vehicle from the garage    | **GET**    | `/api/v1/vehicles/{licenseNumber}`         | ------              | `DetailedVehicle` boundary          |
 | retrieve all vehicles from the garage | **GET**    | `/api/v1/vehicles`                         | ------              | Array of `DetailedVehicle` boundary |
@@ -28,7 +28,7 @@ The service provide the following utilities:
 The endpoint **GET** `/api/v1/vehicles/{licenseNumber}` returns an Array of `DetailedVehicle` boundaries which represent a Page of 20 elements with default sort parameters.
 The endpoint will accept optional variables to further customize the returned data.
 
-- `filterType`: will invoke a query based on its value. Permitted values are (all values are case sensitive):
+- `filterType`: will invoke a query based on its value. Permitted values are (all values are case-sensitive):
   - none (i.e. empty String)
   - byEnergyType
   - byModelName
@@ -42,7 +42,7 @@ The endpoint will accept optional variables to further customize the returned da
   - licenseNumber
   - energy (represent the available energy for a vehicle)
   - maxPressure
-- `order`: the order of the sort. Can be either **ASC** or **DESC** (case sensitive)
+- `order`: the order of the sort. Can be either **ASC** or **DESC** (case-sensitive)
 
 To summarize if we were to access the endpoint above with the following values:
 
@@ -62,11 +62,12 @@ The convenient way to Build and run the app is with docker-compose.
 - make sure you have docker up and running
 - navigate to the app root directory using a CLI of your choice
 - run the command `docker-compose -f garage-compose.yaml up` (you can add a `-d` flag to have the app run in the background)
-- if you ran the command with the `-d` flag - in order to shutdown the app run `docker-compose -f garage-compose.yaml down`
+- if you ran the command with the `-d` flag - in order to shut down the app run `docker-compose -f garage-compose.yaml down`
 
-You can also run the app from your preferred IDE, just make sure you create 3 enbironment variables:
+You can also run the app from your preferred IDE, just make sure you create 3 environment variables:
 
-- `POSTGRESS_URI` with a URI to your postgress instance (look at `garage-compose.yaml` for a reference should you need any)
+- `POSTGRESS_URI` with a URI to your postgres instance (look at `garage-compose.yaml` for a reference should you need any)
 - `POSTRGESS_USER`
 - `POSTGRESS_PASSWORD`
-  Alternatively you can setup that variable as environment variable on your machine - build the app with gradle (`gradlew assemble`) and run the app through your CLI.
+  Alternatively you can set up that variable as environment variable on your machine - build the app with gradle (`gradlew assemble`) and run the app through your CLI.
+  Running the tests also requires setting up those 3 variables as environment variables.
