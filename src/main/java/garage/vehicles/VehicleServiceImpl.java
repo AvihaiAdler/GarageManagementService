@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import garage.dal.VehiclesDao;
+import garage.data.dal.VehiclesDao;
 import garage.exceptions.BadRequestException;
 import garage.exceptions.ConflictException;
 import garage.exceptions.NotFoundException;
@@ -119,10 +119,8 @@ public class VehicleServiceImpl implements VehicleService {
       
       // save the vehicle
       return boundaryEntityConverter.toBoundary(vehiclesDao.save(vehicleEntity));
-    } catch (NullPointerException np) {
+    } catch (NullPointerException | IllegalArgumentException np) {
       throw new BadRequestException(np);
-    } catch (IllegalArgumentException il) {
-      throw new BadRequestException(il);
     }
   }
 
@@ -250,9 +248,8 @@ public class VehicleServiceImpl implements VehicleService {
    */
   private String getSortParam(String sortBy) {
     return switch(sortBy) {
-      case "id" -> sortBy;
+      case "id", "licenseNumber" -> sortBy;
       case "model" -> "modelName";
-      case "licenseNumber" -> sortBy;
       case "energy" -> "energyPercentage";
       case "maxPressure" -> "maxTirePressure";
       default -> throw new BadRequestException("invalid sort param " + sortBy);

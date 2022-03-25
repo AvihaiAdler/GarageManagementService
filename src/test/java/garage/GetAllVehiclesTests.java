@@ -3,8 +3,8 @@ package garage;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,6 @@ import garage.vehicles.misc.VehicleTypes;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GetAllVehiclesTests {
   private int port;
-  private String baseUrl;
   private WebClient webClient;
   private List<VehicleBoundary> vehicles;
   
@@ -35,7 +34,7 @@ public class GetAllVehiclesTests {
   
   @PostConstruct
   public void init() {
-    baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
+    String baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
     webClient = WebClient.create(baseUrl);
     
     vehicles = List.of(
@@ -50,13 +49,11 @@ public class GetAllVehiclesTests {
   
   @BeforeEach
   public void populateDb() {
-    vehicles.forEach(vehicle -> {
-      webClient.post()
-              .bodyValue(vehicle)
-              .retrieve()
-              .bodyToMono(DetailedVehicleBoundary.class)
-              .block();
-    });
+    vehicles.forEach(vehicle -> webClient.post()
+            .bodyValue(vehicle)
+            .retrieve()
+            .bodyToMono(DetailedVehicleBoundary.class)
+            .block());
   }
   
   @AfterEach
@@ -94,7 +91,7 @@ public class GetAllVehiclesTests {
     // given
     var numOfCars = vehicles.stream()
             .filter(vehicle -> vehicle.vehicleType().getType().equalsIgnoreCase(VehicleTypes.Car.toString()))
-            .collect(Collectors.toList())
+            .toList()
             .size();
     
     var filterType = "byVehicleType";
@@ -119,10 +116,10 @@ public class GetAllVehiclesTests {
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
             .map(VehicleTypeBoundary::getEnergySource)
-            .filter(str -> str != null)
+            .filter(Objects::nonNull)
             .map(String::toLowerCase)
             .filter(Predicate.isEqual(EnergySourceTypes.Regular.toString().toLowerCase()))
-            .collect(Collectors.toList())
+            .toList()
             .size();
     
     var filterType = "byEnergyType";
@@ -163,10 +160,10 @@ public class GetAllVehiclesTests {
     var numOfRegularVehicles = vehicles.stream()
             .map(VehicleBoundary::vehicleType)
             .map(VehicleTypeBoundary::getEnergySource)
-            .filter(str -> str != null)
+            .filter(Objects::nonNull)
             .map(String::toLowerCase)
             .filter(Predicate.isEqual(EnergySourceTypes.Regular.toString().toLowerCase()))
-            .collect(Collectors.toList())
+            .toList()
             .size();
     
     var size = 2;

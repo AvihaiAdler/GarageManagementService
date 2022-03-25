@@ -7,17 +7,17 @@ import garage.vehicles.boundaries.PressureBoundary;
 import garage.vehicles.boundaries.VehicleBoundary;
 
 public interface VehicleService {
-  public DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary);
+  DetailedVehicleBoundary addVehicle(VehicleBoundary vehicleBoundary);
   
-  public DetailedVehicleBoundary getVehicle(String licenseNumber);
+  DetailedVehicleBoundary getVehicle(String licenseNumber);
   
-  public List<DetailedVehicleBoundary> getAllVehicles(String filterType, String filterValue, int size, int page, String sortBy, String order);
+  List<DetailedVehicleBoundary> getAllVehicles(String filterType, String filterValue, int size, int page, String sortBy, String order);
   
-  public void inflateTires(String licenseNumber, PressureBoundary pressure);
+  void inflateTires(String licenseNumber, PressureBoundary pressure);
   
-  public void refuel(String licenseNumber, FuelBoundary fuel);
+  void refuel(String licenseNumber, FuelBoundary fuel);
   
-  public void deleteAllVehicles();
+  void deleteAllVehicles();
 
-  public void delete(String licenseNumber);
+  void delete(String licenseNumber);
 }

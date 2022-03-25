@@ -6,11 +6,11 @@ import garage.vehicles.misc.VehicleTypes;
 
 public interface Util {
 
-  public VehicleTypes getTypeAsEnum(VehicleTypeBoundary vehicleType);
+  VehicleTypes getTypeAsEnum(VehicleTypeBoundary vehicleType);
   
-  public EnergySourceTypes getEnergySourceAsEnum(VehicleTypeBoundary vehicleType);
+  EnergySourceTypes getEnergySourceAsEnum(VehicleTypeBoundary vehicleType);
   
-  public boolean checkValidLicenseNumber(String licenseNumber);
+  boolean checkValidLicenseNumber(String licenseNumber);
   
-  public int getNumberOfWheels(VehicleTypes type);
+  int getNumberOfWheels(VehicleTypes type);
 }

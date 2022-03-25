@@ -12,16 +12,16 @@ public interface VehicleBoundaryEntityConverter {
    * @param entity : {@code VehicleEntity}
    * @return {@code DetailedVehicleBoundary}
    */
-  public DetailedVehicleBoundary toBoundary(VehicleEntity entity);
+  DetailedVehicleBoundary toBoundary(VehicleEntity entity);
   
   /**
    * Converts a {@code VehicleBoundary} to {@code VehicleEntity} and initializes {@code VehicleEntity}'s wheels with random values
    * @param boundary : {@code VehicleBoundary}
    * @return {@code VehicleEntity}
    */
-  public VehicleEntity toEntity(VehicleBoundary boundary);
+  VehicleEntity toEntity(VehicleBoundary boundary);
   
-  public Map<String, Wheel> jsonToMap(String wheels);
+  Map<String, Wheel> jsonToMap(String wheels);
   
-  public String mapToJson(Map<String, Wheel> wheels);
+  String mapToJson(Map<String, Wheel> wheels);
 }

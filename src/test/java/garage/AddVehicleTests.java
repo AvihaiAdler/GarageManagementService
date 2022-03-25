@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import garage.dal.VehiclesDao;
+import garage.data.dal.VehiclesDao;
 import garage.util.Util;
 import garage.vehicles.boundaries.DetailedVehicleBoundary;
 import garage.vehicles.boundaries.VehicleBoundary;
@@ -22,7 +22,6 @@ import garage.vehicles.misc.VehicleTypes;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class AddVehicleTests {
   private int port;
-  private String baseUrl;
   private WebClient webClient;
   private VehiclesDao vehiclesDao;
   private Util util;
@@ -56,7 +55,7 @@ class AddVehicleTests {
   
   @PostConstruct
   public void init() {
-    baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
+    String baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
     webClient = WebClient.create(baseUrl);
   }
   
@@ -119,6 +118,7 @@ class AddVehicleTests {
             .block();
     
     // then
+    assertThat(response).isNotNull();
     assertThat(response.vehicleType().getEnergySource()).isNull();
   }
   

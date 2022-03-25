@@ -2,7 +2,7 @@ package garage.vehicles;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import garage.dal.EnergySourceDao;
+import garage.data.dal.EnergySourceDao;
 import garage.data.EnergySourceEntity;
 import garage.data.VehicleEntity;
 import garage.logic.EnergySourceService;

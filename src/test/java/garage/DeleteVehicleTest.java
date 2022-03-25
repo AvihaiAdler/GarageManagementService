@@ -19,7 +19,6 @@ import garage.vehicles.misc.VehicleTypes;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DeleteVehicleTest {
   private int port;
-  private String baseUrl;
   private WebClient webClient;
   
   @LocalServerPort
@@ -29,7 +28,7 @@ public class DeleteVehicleTest {
   
   @PostConstruct
   public void init() {
-    baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
+    String baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
     webClient = WebClient.create(baseUrl);
   }
   

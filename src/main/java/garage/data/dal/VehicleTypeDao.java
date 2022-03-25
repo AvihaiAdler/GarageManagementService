@@ -1,4 +1,4 @@
-package garage.dal;
+package garage.data.dal;
 
 import java.util.Optional;
 

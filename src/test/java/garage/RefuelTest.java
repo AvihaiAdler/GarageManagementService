@@ -18,7 +18,6 @@ import garage.vehicles.misc.VehicleTypes;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RefuelTest {
   private int port;
-  private String baseUrl;
   private WebClient webClient;
   
   @LocalServerPort
@@ -28,7 +27,7 @@ public class RefuelTest {
   
   @PostConstruct
   public void init() {
-    baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
+    String baseUrl = "http://localhost:" + port + "/api/v1/vehicles";
     webClient = WebClient.create(baseUrl);
   }
   
@@ -51,7 +50,7 @@ public class RefuelTest {
     var vehicle = new VehicleBoundary(new VehicleTypeBoundary(VehicleTypes.Car.toString(), EnergySourceTypes.Electric.toString()), 
             "Honda", 
             licenseNumber, 
-            registedFuelPercent, 
+            registedFuelPercent,
             55);
     
     // and
@@ -80,6 +79,7 @@ public class RefuelTest {
             .block();
     
     // then
+    assertThat(response).isNotNull();
     assertThat(response.energyPercentage()).isNotEqualTo(registedFuelPercent);
     assertThat(response.energyPercentage()).isEqualTo(fuel.fuelPercentage());
   }
