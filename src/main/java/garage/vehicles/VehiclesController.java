@@ -24,7 +24,8 @@ public class VehiclesController {
     this.vehiclesService = vehiclesService;
   }
   
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, 
+          produces = MediaType.APPLICATION_JSON_VALUE)
   public DetailedVehicleBoundary addVehicle(@RequestBody VehicleBoundary vehicleBoundary) {
     return vehiclesService.addVehicle(vehicleBoundary);
   }
