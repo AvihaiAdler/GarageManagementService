@@ -241,6 +241,8 @@ public class VehicleServiceImpl implements VehicleService {
   @Transactional
   public void deleteAllVehicles() {
     vehiclesDao.deleteAll();
+    vehicleTypeService.deleteAll();
+    energySourceService.deleteAll();
   }
   
   /*

@@ -25,4 +25,9 @@ public class EnergySourceServiceImpl implements EnergySourceService {
     
     energySourceDao.save(energySourceEntity.addVehicle(vehicleEntity));
   }
+
+  @Override
+  public void deleteAll() {
+    energySourceDao.deleteAll();
+  }
 }

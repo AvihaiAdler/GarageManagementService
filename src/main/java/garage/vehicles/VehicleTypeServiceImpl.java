@@ -25,4 +25,9 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
     vehicleTypeDao.save(typeEntity.addVehicle(vehicleEntity));    
   }
+
+  @Override
+  public void deleteAll() {
+    vehicleTypeDao.deleteAll();
+  }
 }
