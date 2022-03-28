@@ -12,7 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import garage.data.dal.VehiclesDao;
+
+import garage.dal.VehiclesDao;
 import garage.util.Util;
 import garage.vehicles.boundaries.DetailedVehicleBoundary;
 import garage.vehicles.boundaries.VehicleBoundary;

@@ -1,4 +1,4 @@
-package garage.data.dal;
+package garage.dal;
 
 import java.util.Optional;
 import org.springframework.data.domain.Page;

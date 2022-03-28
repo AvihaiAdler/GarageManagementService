@@ -8,7 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import garage.data.dal.VehiclesDao;
+
+import garage.dal.VehiclesDao;
 import garage.exceptions.BadRequestException;
 import garage.exceptions.ConflictException;
 import garage.exceptions.NotFoundException;
