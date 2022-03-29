@@ -23,7 +23,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     var typeEntity = vehicleTypeDao
             .findByVehicleType(type.toString().toLowerCase())
             .orElse(new VehicleTypeEntity(type.toString().toLowerCase()));
-
+    
     vehicleTypeDao.save(typeEntity.addVehicle(vehicleEntity));    
   }
 
